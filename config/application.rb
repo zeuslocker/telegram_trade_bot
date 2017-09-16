@@ -33,6 +33,7 @@ module BotTg
           user = UserAuthorize.new(message.from.username).perform
           MainListener.new(bot, message, user).perform
           SpecialMessageListener.new(bot, message, user).perform
+          ProductTitleListener.new(bot, message, user).perform
         end
       end
     end

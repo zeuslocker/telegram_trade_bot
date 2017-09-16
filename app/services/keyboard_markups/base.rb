@@ -4,7 +4,7 @@ module KeyboardMarkups
       new(*args).perform
     end
 
-    def initialize(one_time_keyboard: false)
+    def initialize(one_time_keyboard: false, **)
       @one_time_keyboard = one_time_keyboard
     end
 

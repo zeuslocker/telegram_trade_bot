@@ -32,7 +32,7 @@ module BotTg
         bot.listen do |message|
           user = UserAuthorize.new(message.from.username).perform
           MainListener.new(bot, message, user).perform
-          #SpecialMessageListener.new(bot, message).perform
+          SpecialMessageListener.new(bot, message, user).perform
         end
       end
     end

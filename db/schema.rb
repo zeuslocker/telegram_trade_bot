@@ -10,22 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_170_909_184_439) do
+ActiveRecord::Schema.define(version: 20170909135610) do
+
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'products', force: :cascade do |t|
-    t.text 'title'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "products", force: :cascade do |t|
+    t.string "title", null: false
+    t.float "price", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.string 'user_name', null: false
-    t.float 'balance', default: 0.0, null: false
-    t.float 'total_order_price', default: 0.0, null: false
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['user_name'], name: 'index_users_on_user_name', unique: true
+  create_table "users", force: :cascade do |t|
+    t.string "user_name", null: false
+    t.float "balance", default: 0.0, null: false
+    t.float "total_order_price", default: 0.0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
+
 end

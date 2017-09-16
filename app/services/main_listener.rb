@@ -1,5 +1,6 @@
 class MainListener
   include DefaultMessage
+  include Modules::DefaultOptions
 
   attr_reader :bot, :message, :user
 
@@ -9,12 +10,12 @@ class MainListener
     @user = user
   end
 
-  def perform
+  def perform # rubocop:disable Metrics/AbcSize
     case message.text
     when '🎅 Главная'
-      Actions::Main.call({}, 'bot' => bot, 'current_user' => user, 'message' => message)
+      Actions::Main.call(nil, default_options)
     when '😰 Правила'
-      bot.api.sendMessage(default_message(message, I18n.t('rules')))
+      Actions::Rules.call(nil, default_options)
     when '💶 Прайс лист'
       bot.api.sendMessage(default_message(message, PriceList.call))
     end

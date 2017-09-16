@@ -3,6 +3,7 @@ AllCops:
   Exclude:
     # You could specify set of files or dirs while you want to be ignored by rubocop
     - 'vendor/**/*'
+    - 'spec/**/*'
     - 'config/**/*'
     - 'db/**/*'
     - 'bin/*'
@@ -11,6 +12,7 @@ AllCops:
     - 'Rakefile'
     - 'Guardfile'
     - 'config.ru'
+    - 'lib/tasks/app_import_static_templates.rake'
 Rails:
   Enabled: true
 Documentation: # Disabling documentation cop
@@ -26,4 +28,6 @@ FrozenStringLiteralComment:
 Lint/UnifiedInteger:
  Enabled: false
 OutputSafety:
+  Enabled: false
+Style/ClassAndModuleChildren:
   Enabled: false

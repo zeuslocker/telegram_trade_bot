@@ -31,3 +31,5 @@ OutputSafety:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
+Style/LambdaCall:
+  Enabled: false

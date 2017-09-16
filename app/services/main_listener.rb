@@ -2,6 +2,10 @@ class MainListener
   include DefaultMessage
   include Modules::DefaultOptions
 
+  MAIN_PAGE = '🎅 Главная'.freeze
+  RULES_PAGE = '😰 Правила'.freeze
+  PRICE_LIST_PAGE = '💶 Прайс лист'.freeze
+
   attr_reader :bot, :message, :user
 
   def initialize(bot, message, user)
@@ -12,12 +16,12 @@ class MainListener
 
   def perform # rubocop:disable Metrics/AbcSize
     case message.text
-    when '🎅 Главная'
-      Actions::Main.call(nil, default_options)
-    when '😰 Правила'
-      Actions::Rules.call(nil, default_options)
-    when '💶 Прайс лист'
-      bot.api.sendMessage(default_message(message, PriceList.call))
+    when MAIN_PAGE
+      Actions::Main.(nil, default_options)
+    when RULES_PAGE
+      Actions::Rules.(nil, default_options)
+    when PRICE_LIST_PAGE
+      Actions::PriceList.(nil, default_options)
     end
   end
 

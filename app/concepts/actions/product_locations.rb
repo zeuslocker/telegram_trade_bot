@@ -14,6 +14,6 @@ class Actions::ProductLocations < Trailblazer::Operation
   end
 
   def send_responce!(_options, bot:, message:, product:, available_locations:, **)
-    bot.api.sendMessage(default_message(message, "#{product.title}", KeyboardMarkups::ProductLocations.(locations: available_locations)))
+    bot.api.sendMessage(default_message(message, product.title.to_s, KeyboardMarkups::ProductLocations.(locations: available_locations)))
   end
 end

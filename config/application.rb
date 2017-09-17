@@ -32,8 +32,12 @@ module BotTg
         bot.listen do |message|
           user = UserAuthorize.new(message.from.username).perform
           MainListener.new(bot, message, user).perform
-          SpecialMessageListener.new(bot, message, user).perform
-          ProductTitleListener.new(bot, message, user).perform
+          if user.choosen_product_id.nil?
+            ProductTitleListener.new(bot, message, user).perform
+            SpecialMessageListener.new(bot, message, user).perform
+          else
+            ProductListener.new(bot, message, user).perform
+          end
         end
       end
     end

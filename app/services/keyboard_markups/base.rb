@@ -10,8 +10,7 @@ module KeyboardMarkups
 
     def perform # define buttons in subclass
       Telegram::Bot::Types::ReplyKeyboardMarkup.new(keyboard: buttons,
-                                                    one_time_keyboard: one_time_keyboard
-      )
+                                                    one_time_keyboard: one_time_keyboard)
     end
 
     private

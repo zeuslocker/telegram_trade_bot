@@ -33,3 +33,5 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/LambdaCall:
   Enabled: false
+Metrics/ParameterLists:
+  Enabled: false

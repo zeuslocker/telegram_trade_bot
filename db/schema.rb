@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170917072024) do
+ActiveRecord::Schema.define(version: 20170924112400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,14 @@ ActiveRecord::Schema.define(version: 20170917072024) do
     t.integer "choosen_product_id"
     t.integer "choosen_treasure_id"
     t.integer "choosen_location"
+    t.datetime "approval_date"
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
+  end
+
+  create_table "wallets", force: :cascade do |t|
+    t.integer "easypay"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "treasures", "products"

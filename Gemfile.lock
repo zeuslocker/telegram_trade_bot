@@ -38,6 +38,8 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts_as_singleton (0.0.8)
+      activerecord (>= 3.1.0)
     arel (8.0.0)
     ast (2.3.0)
     axiom-types (0.1.1)
@@ -47,6 +49,7 @@ GEM
     bindex (0.5.0)
     builder (3.2.3)
     byebug (9.1.0)
+    chronic (0.10.2)
     coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -71,6 +74,8 @@ GEM
       declarative-option (< 0.2.0)
       representable (>= 2.4.0, <= 3.1.0)
       uber (< 0.2.0)
+    domain_name (0.5.20170404)
+      unf (>= 0.0.5, < 1.0.0)
     equalizer (0.0.11)
     erubi (1.6.1)
     execjs (2.7.0)
@@ -79,6 +84,8 @@ GEM
     ffi (1.9.18)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
     i18n (0.8.6)
     ice_nine (0.11.2)
     jbuilder (2.7.0)
@@ -100,6 +107,7 @@ GEM
     minitest (5.10.3)
     multi_json (1.12.2)
     multipart-post (2.0.0)
+    netrc (0.11.0)
     nio4r (2.1.0)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
@@ -159,6 +167,10 @@ GEM
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
       uber (< 0.2.0)
+    rest-client (2.0.2)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rubocop (0.50.0)
       parallel (~> 1.10)
       parser (>= 2.3.3.1, < 3.0)
@@ -219,6 +231,9 @@ GEM
     uber (0.1.0)
     uglifier (3.2.0)
       execjs (>= 0.3.0, < 3)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.4)
     unicode-display_width (1.3.0)
     virtus (1.0.5)
       axiom-types (~> 0.1)
@@ -233,11 +248,14 @@ GEM
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
+    whenever (0.9.7)
+      chronic (>= 0.6.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts_as_singleton
   byebug
   coffee-rails (~> 4.2)
   daemons (~> 1.2, >= 1.2.4)
@@ -249,6 +267,7 @@ DEPENDENCIES
   rails (~> 5.1.3)
   rails-i18n
   reform-rails
+  rest-client
   rubocop
   sass-rails (~> 5.0)
   spring
@@ -261,6 +280,7 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+  whenever
 
 BUNDLED WITH
    1.16.0.pre.2

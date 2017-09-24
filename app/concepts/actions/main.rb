@@ -6,7 +6,10 @@ module Actions
     step :send_responce!
 
     def reset_user_chooses!(_options, current_user:, **)
-      current_user.update(choosen_product_id: nil)
+      current_user.update(choosen_product_id: nil,
+                          choosen_location: nil,
+                          choosen_treasure_id: nil,
+                          approval_date: nil)
     end
 
     def send_responce!(_options, bot:, message:, current_user:, keyboard_markup:, **)

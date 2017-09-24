@@ -9,6 +9,9 @@ gem 'trailblazer'
 gem 'trailblazer-operation'
 gem 'reform-rails'
 gem 'trailblazer-rails'
+gem 'rest-client'
+gem 'acts_as_singleton'
+gem 'whenever', :require => false
 
 gem 'rubocop', require: false
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

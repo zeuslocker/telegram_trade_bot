@@ -12,7 +12,12 @@ class ProductListener
 
   def perform
     return Actions::ProductLocationTreasures.call(nil, default_options, 'product' => product, 'location' => location) if expected_location_name?
-    Actions::ShowPayment.call(nil, default_options, 'product' => product, 'location' => location, 'treasure' => treasure)
+    return Actions::ShowPayment.call(nil, default_options, 'product' => product, 'location' => location, 'treasure' => treasure) if location && product && treasure
+    return Actions::Main.(nil, default_options) if message.text == MainListener::REVERT_PAYMENT_PAGE
+  end
+
+  def only_sell_treasure
+    Actions::SellTreasure.(nil, default_options, 'treasure' => treasure)
   end
 
   def product

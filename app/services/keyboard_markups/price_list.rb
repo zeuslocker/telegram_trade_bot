@@ -1,6 +1,7 @@
 module KeyboardMarkups
   class PriceList < Base
     PRODUCT_PER_ROW = 2
+    attr_reader :buttons
 
     def initialize(products:, one_time_keyboard: true)
       super

@@ -4,6 +4,8 @@ class Actions::PriceList < Trailblazer::Operation
   step :setup_model!
   step :step_plucked_model!
   step :build_list!
+  step :setup_keyboard!
+  step :setup_allowed_messages!
   step :send_responce!
 
   def setup_model!(options, **)
@@ -21,8 +23,16 @@ class Actions::PriceList < Trailblazer::Operation
     options['price_list'].prepend(I18n.t('price_list_header'))
   end
 
-  def send_responce!(_options, bot:, model:, message:, price_list:, **)
-    bot.api.sendMessage(default_message(message, price_list, KeyboardMarkups::PriceList.(products: model, one_time_keyboard: true)))
+  def setup_keyboard!(options, model:, **)
+    options['key_board'] = KeyboardMarkups::PriceList.new(products: model, one_time_keyboard: true)
+  end
+
+  def setup_allowed_messages!(options, current_user:, key_board:, **)
+    current_user.update(allowed_messages: key_board.buttons.flatten)
+  end
+
+  def send_responce!(_options, bot:, model:, message:, price_list:, key_board:, **)
+    bot.api.sendMessage(default_message(message, price_list, key_board.perform))
   end
 
   def product_fragment(product)

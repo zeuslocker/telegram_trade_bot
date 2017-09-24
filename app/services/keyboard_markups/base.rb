@@ -13,8 +13,6 @@ module KeyboardMarkups
                                                     one_time_keyboard: one_time_keyboard)
     end
 
-    private
-
     attr_reader :one_time_keyboard, :buttons
   end
 end

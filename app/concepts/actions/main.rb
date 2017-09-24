@@ -2,7 +2,8 @@ module Actions
   class Main < Trailblazer::Operation
     include ::DefaultMessage
     success :reset_user_chooses!
-    step :keyboard_markup!
+    step :setup_keyboard!
+    step :setup_allowed_messages!
     step :send_responce!
 
     def reset_user_chooses!(_options, current_user:, **)
@@ -12,8 +13,8 @@ module Actions
                           approval_date: nil)
     end
 
-    def send_responce!(_options, bot:, message:, current_user:, keyboard_markup:, **)
-      bot.api.sendMessage(default_message(message, I18n.t('main', user_data(current_user)), keyboard_markup))
+    def send_responce!(_options, bot:, message:, current_user:, key_board:, **)
+      bot.api.sendMessage(default_message(message, I18n.t('main', user_data(current_user)), key_board.perform))
     end
 
     def user_data(current_user)
@@ -24,8 +25,12 @@ module Actions
       }
     end
 
-    def keyboard_markup!(options, **)
-      options['keyboard_markup'] = KeyboardMarkups::Entry.()
+    def setup_keyboard!(options, **)
+      options['key_board'] = KeyboardMarkups::Entry.new
+    end
+
+    def setup_allowed_messages!(options, current_user:, key_board:, **)
+      current_user.update(allowed_messages: key_board.buttons.flatten)
     end
   end
 end

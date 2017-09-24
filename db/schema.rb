@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170924112400) do
+ActiveRecord::Schema.define(version: 20170924151937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20170924112400) do
     t.integer "choosen_treasure_id"
     t.integer "choosen_location"
     t.datetime "approval_date"
+    t.text "allowed_messages", default: [], array: true
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 

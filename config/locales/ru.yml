@@ -49,3 +49,8 @@ ru:
   pay_location: "Львов %{location}"
   show_payment: "<b>%{product_title}</b>\n\nК оплате <b>%{pay_price}</b>\nНомер клада <b>#%{treasure_id}</b>\nМетод оплаты <b>%{pay_method}</b>\n%{pay_method} кошелек <b>%{wallet}</b>\nЛокация <b>%{location}</b>"
   confirmation_code: "В течении 20 минут\nВведите <b>код подтверждения</b> платежа:"
+  main_page: '🎅 Главная'
+  rules_page: '😰 Правила'
+  price_page: '💶 Прайс лист'
+  revert_page: '⛔️ Отменить'
+  payment_checking: '⏳ Проверяем платеж...'

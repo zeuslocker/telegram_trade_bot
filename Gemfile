@@ -11,6 +11,8 @@ gem 'reform-rails'
 gem 'trailblazer-rails'
 gem 'rest-client'
 gem 'acts_as_singleton'
+gem 'capybara'
+gem 'cucumber'
 gem 'whenever', :require => false
 
 gem 'rubocop', require: false

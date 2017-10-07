@@ -13,6 +13,7 @@ gem 'rest-client'
 gem 'acts_as_singleton'
 gem 'capybara'
 gem 'cucumber'
+gem 'nokogiri'
 gem 'whenever', :require => false
 
 gem 'rubocop', require: false

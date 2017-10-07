@@ -1,7 +1,7 @@
 module Actions
   class Main < Trailblazer::Operation
     include ::DefaultMessage
-    success :reset_user_chooses!
+    success TrailblazerHelpers::Operations::ResetUserChooses
     step :setup_keyboard!
     step :setup_allowed_messages!
     step :send_responce!

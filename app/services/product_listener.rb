@@ -17,7 +17,9 @@ class ProductListener
   end
 
   def only_sell_treasure
-    Actions::SellTreasure.(nil, default_options, 'treasure' => treasure)
+    Actions::SellTreasure.(nil, 
+                           default_options,
+                           'treasure' => Treasure.find_by(id: user.choosen_treasure_id))
   end
 
   def product

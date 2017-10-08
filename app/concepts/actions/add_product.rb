@@ -1,11 +1,11 @@
 module Actions
   class AddProduct < ::Trailblazer::Operation
-    ADD_PRODUCT = '_Xadd_product_|'.freeze
+    ADD_PRODUCT = '_Xadd_product_|'.freeze # _Xadd_product_|{"title": "eee", price: 2}
     include DefaultMessage
     extend ::Trailblazer::Operation::Contract::DSL
-
     contract ::Forms::ProductForm
-    step :params_parse
+
+    step :params_parse, fail_fast: true
     step ::Trailblazer::Operation::Model(::Product, :new)
     step ::Trailblazer::Operation::Contract::Build()
     step ::Trailblazer::Operation::Contract::Validate()

@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170924151937) do
+ActiveRecord::Schema.define(version: 20171008071345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "pay_codes", force: :cascade do |t|
+    t.datetime "payed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "products", force: :cascade do |t|
     t.string "title", null: false
@@ -31,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170924151937) do
     t.datetime "updated_at", null: false
     t.float "amount", null: false
     t.integer "location", null: false
+    t.integer "status", default: 0
     t.index ["product_id"], name: "index_treasures_on_product_id"
   end
 
@@ -45,6 +52,7 @@ ActiveRecord::Schema.define(version: 20170924151937) do
     t.integer "choosen_location"
     t.datetime "approval_date"
     t.text "allowed_messages", default: [], array: true
+    t.datetime "pay_code_lock"
     t.index ["user_name"], name: "index_users_on_user_name", unique: true
   end
 

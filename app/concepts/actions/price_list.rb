@@ -9,7 +9,9 @@ class Actions::PriceList < Trailblazer::Operation
   step :send_responce!
 
   def setup_model!(options, **)
-    options['model'] = ::Product.joins(:treasures).distinct
+    options['model'] = ::Product.joins(:treasures)
+                                .where(treasures: { status: :available })
+                                .distinct
   end
 
   def step_plucked_model!(options, model:, **)
@@ -27,11 +29,11 @@ class Actions::PriceList < Trailblazer::Operation
     options['key_board'] = KeyboardMarkups::PriceList.new(products: model, one_time_keyboard: true)
   end
 
-  def setup_allowed_messages!(options, current_user:, key_board:, **)
+  def setup_allowed_messages!(_options, current_user:, key_board:, **)
     current_user.update(allowed_messages: key_board.buttons.flatten)
   end
 
-  def send_responce!(_options, bot:, model:, message:, price_list:, key_board:, **)
+  def send_responce!(_options, bot:, message:, price_list:, key_board:, **)
     bot.api.sendMessage(default_message(message, price_list, key_board.perform))
   end
 

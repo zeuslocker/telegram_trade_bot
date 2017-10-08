@@ -9,7 +9,7 @@ class TreasurePrice
   end
 
   def perform
-    product.price * treasure.amount
+    product.price * treasure.amount.to_f
   end
 
   private

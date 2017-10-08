@@ -6,7 +6,7 @@ class UserAuthorize
   end
 
   def perform
-      @user = User.find_by(user_name: user_name) || User.create(user_name: user_name, allowed_messages: default_allowed_messages)
+    @user = User.find_by(user_name: user_name) || User.create(user_name: user_name, allowed_messages: default_allowed_messages)
   end
 
   def default_allowed_messages

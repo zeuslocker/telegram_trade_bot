@@ -1,0 +1,2 @@
+class PayCode < ApplicationRecord
+end

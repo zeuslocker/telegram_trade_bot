@@ -10,12 +10,12 @@ module Actions
 
     def translation_options(options, product:, location:, treasure:, **)
       options['translation_options'] = {
-         product_title: product.title,
-         pay_price: TreasurePrice.call(product, treasure),
-         treasure_id: treasure.id,
-         pay_method: 'EasyPay',
-         wallet: Wallet.instance.easypay,
-         location: I18n.t('pay_location', location: I18n.t(location)[1..-1])
+        product_title: product.title,
+        pay_price: TreasurePrice.call(product, treasure),
+        treasure_id: treasure.id,
+        pay_method: 'EasyPay',
+        wallet: Wallet.instance.easypay,
+        location: I18n.t('pay_location', location: I18n.t(location)[1..-1])
       }
     end
 
@@ -23,7 +23,7 @@ module Actions
       options['responce_message'] = I18n.t('show_payment', translation_options)
     end
 
-    def update_user(options, current_user:, treasure:, **)
+    def update_user(_options, current_user:, treasure:, **)
       current_user.update(choosen_treasure_id: treasure.id, approval_date: Time.current)
     end
 
@@ -31,7 +31,7 @@ module Actions
       options['key_board'] = KeyboardMarkups::RevertPayment.new
     end
 
-    def setup_allowed_messages!(options, current_user:, key_board:, **)
+    def setup_allowed_messages!(_options, current_user:, key_board:, **)
       current_user.update(allowed_messages: (key_board.buttons.flatten << MainListener::PAYMENT_CODE))
     end
 

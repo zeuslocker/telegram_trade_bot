@@ -4,14 +4,31 @@ require 'csv'
 
 class Actions::SellTreasure < Trailblazer::Operation
   WALLET_ID = 612304
+  LOGIN = '380630348377'.freeze
+  PASSWORD = 'zeusxlogan1715'.freeze
+  PAY_LOCK_TIME = 5
+
   include DefaultMessage
+  step :check_pay_code_lock!
   step :payment_sign_in
   step :build_report
+  step :setup_treasure_price!
   step :payment_present?
   step :setup_keyboard!
-  step :setup_allowed_messages!
   step :send_responce!
   success TrailblazerHelpers::Operations::ResetUserChooses
+  success :setup_allowed_messages!
+  success :make_after_actions
+
+  def check_pay_code_lock!(options, current_user:, bot:, message:, **)
+    if check_pay_code_lock_condition(current_user)
+      bot.api.sendMessage(
+        default_message(message, I18n.t('wait_for_pay_code_lock', minutes: pay_code_minutes_left(current_user)))
+      )
+      return false
+    end
+    true
+  end
 
   def payment_sign_in(options, **)
     uri = URI.parse("https://easypay.ua/auth/signin")
@@ -27,8 +44,8 @@ class Actions::SellTreasure < Trailblazer::Operation
     request["Upgrade-Insecure-Requests"] = "1"
     request.set_form_data(
       "__RequestVerificationToken" => "nyot0RO4N0O-3IDQ41oAG5ZhLHEj-3PG8eqSZ4JWokZUCIB5ie8YXyAsaVpqI1YPdJyvU4WyOzpM-oeGrRxS6PzUm0_kvJl39_PfjfF76IA1",
-      "login" => "380630348377",
-      "password" => "zeusxlogan1715",
+      "login" => LOGIN,
+      "password" => PASSWORD,
     )
 
     req_options = {
@@ -62,8 +79,8 @@ class Actions::SellTreasure < Trailblazer::Operation
     request["User-Agent"] = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0"
     request.set_form_data(
       "__RequestVerificationToken" => "nyot0RO4N0O-3IDQ41oAG5ZhLHEj-3PG8eqSZ4JWokZUCIB5ie8YXyAsaVpqI1YPdJyvU4WyOzpM-oeGrRxS6PzUm0_kvJl39_PfjfF76IA1",
-      "login" => "380630348377",
-      "password" => "zeusxlogan1715",
+      "login" => LOGIN,
+      "password" => PASSWORD,
     )
 
     req_options = {
@@ -76,11 +93,23 @@ class Actions::SellTreasure < Trailblazer::Operation
     options['response_body'] = Nokogiri::HTML(response.body.force_encoding('UTF-8'))
   end
 
-  def payment_present?(options, response_body:, message:, **)
+  def setup_treasure_price!(options, treasure:, **)
+    options['treasure_price'] = TreasurePrice.call(treasure.product, treasure)
+  end
+
+  def payment_present?(options, response_body:, message:, treasure:, treasure_price:, bot:, current_user:, **)
     response_body.css('table.table-layout tr').each do |row|
-      return true if date_valid?(row, message.text) && code_valid?(row, message.text)
+      return true if date_valid?(row, message.text) &&
+                     code_valid?(row, message.text) &&
+                     sum_valid?(row, treasure_price, bot, message)
     end
+    payment_not_found(bot, message, current_user)
     false
+  end
+
+  def payment_not_found(bot, message, current_user)
+    bot.api.sendMessage(default_message(message, I18n.t('payment_not_found')))
+    current_user.update(pay_code_lock: Time.current)
   end
 
   def setup_keyboard!(options, **)
@@ -95,11 +124,35 @@ class Actions::SellTreasure < Trailblazer::Operation
     bot.api.sendMessage(default_message(message, treasure.description, key_board.perform))
   end
 
+  def make_after_actions!(options, treasure:, current_user:, treasure_price:, **)
+    treasure.update(status: :sold)
+    current_user.update(total_order_price: current_user.total_order_price + treasure_price)
+  end
+
   def date_valid?(row, message)
     row&.at_css('td:first-child')&.children&.text&.split&.last == message[0..4]
   end
 
   def code_valid?(row, message)
     row&.css('td')&.at(4)&.text&.split&.last == message[5..-1]
+  end
+
+  def sum_valid?(row, treasure_price, bot, message)
+    result = row&.css('td')&.at(2)&.children.text.to_f == treasure_price
+    if result
+      bot.api.sendMessage(default_message(message, I18n.t('payment_found')))
+    else
+      bot.api.sendMessage(default_message(message, I18n.t('payment_sum_invalid')))
+    end
+    result
+  end
+
+  def check_pay_code_lock_condition(current_user)
+    current_user.pay_code_lock.present? &&
+    current_user.pay_code_lock > (Time.current - PAY_LOCK_TIME.minutes)
+  end
+
+  def pay_code_minutes_left(current_user)
+    ((current_user.pay_code_lock - (Time.current - PAY_LOCK_TIME.minutes)) / 60).truncate
   end
 end

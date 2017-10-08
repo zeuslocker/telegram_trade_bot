@@ -17,12 +17,12 @@ class MainListener
   end
 
   def perform # rubocop:disable Metrics/AbcSize
+    SpecialMessageListener.new(bot, message, user).perform if user.choosen_product_id.nil?
     if user.allowed_messages.include? message.text
       if user.choosen_product_id.nil? # when product not choosen
         always_listen_messages
         price_listener
         ProductTitleListener.new(bot, message, user).perform
-        SpecialMessageListener.new(bot, message, user).perform
       else
         always_listen_messages
         ProductListener.new(bot, message, user).perform

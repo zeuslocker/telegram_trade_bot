@@ -29,7 +29,7 @@ module Actions
       options['key_board'] = KeyboardMarkups::Entry.new
     end
 
-    def setup_allowed_messages!(options, current_user:, key_board:, **)
+    def setup_allowed_messages!(_options, current_user:, key_board:, **)
       current_user.update(allowed_messages: key_board.buttons.flatten)
     end
   end

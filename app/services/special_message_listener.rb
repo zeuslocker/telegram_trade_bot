@@ -11,5 +11,6 @@ class SpecialMessageListener
 
   def perform
     Actions::AddProduct.call({}, default_options) if message.text.start_with?(Actions::AddProduct::ADD_PRODUCT)
+    Actions::AddTreasure.call({}, default_options) if message.text.start_with?(Actions::AddTreasure::ADD_TREASURE)
   end
 end

@@ -15,10 +15,10 @@ class Actions::SellTreasure < Trailblazer::Operation
   step :setup_treasure_price!
   step :payment_present?
   step :setup_keyboard!
-  step :send_responce!
+  success :send_responce!
   success TrailblazerHelpers::Operations::ResetUserChooses
   success :setup_allowed_messages!
-  success :make_after_actions
+  success :make_after_actions!
 
   def check_pay_code_lock!(options, current_user:, bot:, message:, **)
     if check_pay_code_lock_condition(current_user)
@@ -64,7 +64,7 @@ class Actions::SellTreasure < Trailblazer::Operation
   def build_report(options, bot:, message:, **)
     bot.api.sendMessage(default_message(message, I18n.t('payment_checking')))
     time_current = Time.current
-    uri = URI.parse("https://easypay.ua/wallets/buildreport?walletId=#{WALLET_ID}&month=09&year=#{time_current.year}")
+    uri = URI.parse("https://easypay.ua/wallets/buildreport?walletId=#{WALLET_ID}&month=#{time_current.month}&year=#{time_current.year}")
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/x-www-form-urlencoded"
     request["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
@@ -99,9 +99,10 @@ class Actions::SellTreasure < Trailblazer::Operation
 
   def payment_present?(options, response_body:, message:, treasure:, treasure_price:, bot:, current_user:, **)
     response_body.css('table.table-layout tr').each do |row|
-      return true if date_valid?(row, message.text) &&
+      return save_row(row) && true if date_valid?(row, message.text) &&
                      code_valid?(row, message.text) &&
-                     sum_valid?(row, treasure_price, bot, message)
+                     sum_valid?(row, treasure_price, bot, message) &&
+                     its_new_pay_code?(row)
     end
     payment_not_found(bot, message, current_user)
     false
@@ -121,6 +122,7 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def send_responce!(_options, bot:, message:, treasure:, key_board:, **)
+    bot.api.sendMessage(default_message(message, I18n.t('payment_found')))
     bot.api.sendMessage(default_message(message, treasure.description, key_board.perform))
   end
 
@@ -130,20 +132,16 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def date_valid?(row, message)
-    row&.at_css('td:first-child')&.children&.text&.split&.last == message[0..4]
+    row_get_date(row)&.split&.last == message[0..4]
   end
 
   def code_valid?(row, message)
-    row&.css('td')&.at(4)&.text&.split&.last == message[5..-1]
+    row_get_term_code(row) == message[5..-1]
   end
 
   def sum_valid?(row, treasure_price, bot, message)
     result = row&.css('td')&.at(2)&.children.text.to_f == treasure_price
-    if result
-      bot.api.sendMessage(default_message(message, I18n.t('payment_found')))
-    else
-      bot.api.sendMessage(default_message(message, I18n.t('payment_sum_invalid')))
-    end
+    bot.api.sendMessage(default_message(message, I18n.t('payment_sum_invalid'))) if !result
     result
   end
 
@@ -154,5 +152,23 @@ class Actions::SellTreasure < Trailblazer::Operation
 
   def pay_code_minutes_left(current_user)
     ((current_user.pay_code_lock - (Time.current - PAY_LOCK_TIME.minutes)) / 60).truncate
+  end
+
+  def row_get_date(row)
+    row&.at_css('td:first-child')&.children&.text
+  end
+
+  def row_get_term_code(row)
+    row&.css('td')&.at(4)&.text&.split&.last
+  end
+
+  def save_row(row)
+    PayCode.create(payed_at: DateTime.parse(row_get_date(row)),
+                   term_code: row_get_term_code(row))
+  end
+
+  def its_new_pay_code?(row)
+    !PayCode.exists?(payed_at: DateTime.parse(row_get_date(row)),
+                     term_code: row_get_term_code(row))
   end
 end

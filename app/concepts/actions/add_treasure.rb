@@ -1,11 +1,11 @@
 module Actions
   class AddTreasure < Trailblazer::Operation
-    ADD_TREASURE = '_Xadd_treasure_|'.freeze
+    ADD_TREASURE = '_Xadd_treasure_|'.freeze # _Xadd_treasure_|{"product_title": "eee", "description": "sxsf44rfferg", "lat": 43.32322, "lng": 32.3434, "amount": 1, "location": "suhiv"}
     include DefaultMessage
     extend ::Trailblazer::Operation::Contract::DSL
     contract Forms::TreasureForm
 
-    step ::Macro::ParseModelParams(constant: ADD_TREASURE)
+    step ::Macro::ParseModelParams(constant: ADD_TREASURE), fail_fast: true
     step :setup_product_id
     failure :product_not_found, fail_fast: true
     step ::Trailblazer::Operation::Model(::Treasure, :new)

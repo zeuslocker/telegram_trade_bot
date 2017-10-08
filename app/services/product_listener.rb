@@ -46,7 +46,7 @@ class ProductListener
     values = message.text.scan(TREASURE_MESSAGE_VALUES)
     @treasure_message_data ||= {
       products: { price: values[1].to_f / values[0].to_f },
-      id: values[2].to_i, amount: values[0].to_f
+      id: values[2].to_i, amount: values[0].to_f, status: :available
     }
   end
 

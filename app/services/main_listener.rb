@@ -4,10 +4,12 @@ class MainListener
 
   MAIN_PAGE = I18n.t('main_page').freeze
   RULES_PAGE = I18n.t('rules_page').freeze
+  HOW_TO_PAY_PAGE = I18n.t('how_to_pay').freeze
   PRICE_LIST_PAGE = I18n.t('price_page').freeze
   REVERT_PAYMENT_PAGE = I18n.t('revert_page').freeze
   PAYMENT_CODE = 'payment_code'.freeze
   PAYMENT_CODE_FORMAT = /^[0-2][0-9]:\d/
+
   attr_reader :bot, :message, :user
 
   def initialize(bot, message, user)
@@ -40,6 +42,8 @@ class MainListener
       Actions::Main.(nil, default_options)
     when RULES_PAGE
       Actions::Rules.(nil, default_options)
+    when HOW_TO_PAY_PAGE
+      Actions::HowToPay.(nil, default_options)
     end
   end
 

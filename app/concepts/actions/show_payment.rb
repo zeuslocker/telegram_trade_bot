@@ -24,7 +24,7 @@ module Actions
     end
 
     def update_user(_options, current_user:, treasure:, **)
-      current_user.update(choosen_treasure_id: treasure.id, approval_date: Time.current)
+      current_user.update(choosen_treasure_id: treasure.id, approval_date: Time.current) # TODO add cron
     end
 
     def setup_keyboard!(options, **)

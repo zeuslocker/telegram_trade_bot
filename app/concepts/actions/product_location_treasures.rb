@@ -8,7 +8,7 @@ class Actions::ProductLocationTreasures < Trailblazer::Operation
   step :send_responce!
 
   def setup_model!(options, product:, location:, **)
-    options['model'] = product.treasures.where(location: location)
+    options['model'] = product.treasures.where(location: location, status: :available)
   end
 
   def responce_message!(options, model:, product:, location:, **)

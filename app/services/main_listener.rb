@@ -5,6 +5,7 @@ class MainListener
   MAIN_PAGE = I18n.t('main_page').freeze
   RULES_PAGE = I18n.t('rules_page').freeze
   HOW_TO_PAY_PAGE = I18n.t('how_to_pay').freeze
+  HOW_TO_PAY_COMMAND = '/payments'.freeze
   PRICE_LIST_PAGE = I18n.t('price_page').freeze
   REVERT_PAYMENT_PAGE = I18n.t('revert_page').freeze
   PAYMENT_CODE = 'payment_code'.freeze
@@ -42,7 +43,7 @@ class MainListener
       Actions::Main.(nil, default_options)
     when RULES_PAGE
       Actions::Rules.(nil, default_options)
-    when HOW_TO_PAY_PAGE
+    when HOW_TO_PAY_PAGE, HOW_TO_PAY_COMMAND
       Actions::HowToPay.(nil, default_options)
     end
   end

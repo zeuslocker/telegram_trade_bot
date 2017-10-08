@@ -99,7 +99,7 @@ class Actions::SellTreasure < Trailblazer::Operation
 
   def payment_present?(options, response_body:, message:, treasure:, treasure_price:, bot:, current_user:, **)
     response_body.css('table.table-layout tr').each do |row|
-      return save_row(row) && true if date_valid?(row, message.text) &&
+      return save_pay_code(row) && update_user_balance(current_user, row, treasure_price) && true if date_valid?(row, message.text) &&
                      code_valid?(row, message.text) &&
                      sum_valid?(row, treasure_price, bot, message) &&
                      its_new_pay_code?(row)
@@ -108,8 +108,14 @@ class Actions::SellTreasure < Trailblazer::Operation
     false
   end
 
+  def update_user_balance(user, row, treasure_price)
+    user.update(balance: (user.balance + treasure_price - row_get_sum(row)))
+  end
+
   def payment_not_found(bot, message, current_user)
     bot.api.sendMessage(default_message(message, I18n.t('payment_not_found')))
+    binding.pry
+    current_user.update(allowed_messages: (current_user.allowed_messages << MainListener::HOW_TO_PAY_COMMAND))
     current_user.update(pay_code_lock: Time.current)
   end
 
@@ -140,7 +146,7 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def sum_valid?(row, treasure_price, bot, message)
-    result = row&.css('td')&.at(2)&.children.text.to_f == treasure_price
+    result = row_get_sum(row) >= treasure_price
     bot.api.sendMessage(default_message(message, I18n.t('payment_sum_invalid'))) if !result
     result
   end
@@ -158,11 +164,15 @@ class Actions::SellTreasure < Trailblazer::Operation
     row&.at_css('td:first-child')&.children&.text
   end
 
-  def row_get_term_code(row)
+  def row_get_sum(row)
+    row&.css('td')&.at(2)&.children.text.to_f
+  end
+
+  def row_get_term_code(row)''
     row&.css('td')&.at(4)&.text&.split&.last
   end
 
-  def save_row(row)
+  def save_pay_code(row)
     PayCode.create(payed_at: DateTime.parse(row_get_date(row)),
                    term_code: row_get_term_code(row))
   end

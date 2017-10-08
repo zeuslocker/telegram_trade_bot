@@ -1,12 +1,12 @@
 module Actions
   class ShowPayment < Trailblazer::Operation
     include DefaultMessage
-    step :translation_options
-    step :responce_message
-    step :update_user
-    step :setup_keyboard!
-    step :setup_allowed_messages!
-    step :send_responce
+    success :translation_options
+    success :responce_message
+    success :update_user
+    success :setup_keyboard!
+    success :setup_allowed_messages!
+    success :send_responce
 
     def translation_options(options, product:, location:, treasure:, **)
       options['translation_options'] = {

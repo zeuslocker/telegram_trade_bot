@@ -12,7 +12,7 @@ class Actions::ProductLocations < Trailblazer::Operation
   end
 
   def available_locations!(options, product:, **)
-    options['available_locations'] = product.treasures.pluck(:location).uniq
+    options['available_locations'] = product.treasures.where(status: :available).pluck(:location).uniq
   end
 
   def setup_keyboard!(options, available_locations:, **)

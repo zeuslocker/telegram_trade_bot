@@ -1,15 +1,17 @@
 class UserAuthorize
-  attr_reader :user_name, :user
+  attr_reader :user_name, :user, :bot, :message
 
-  def initialize(user_name)
+  def initialize(user_name, bot, message)
     @user_name = user_name
+    @bot = bot
+    @message = message
   end
 
   def perform
-    @user = User.find_by(user_name: user_name) || User.create(user_name: user_name, allowed_messages: default_allowed_messages)
-  end
-
-  def default_allowed_messages
-    [MainListener::MAIN_PAGE, MainListener::RULES_PAGE, MainListener::PRICE_LIST_PAGE]
+    @user = User.find_by(user_name: user_name)
+    return user if user
+    @user = User.create(user_name: user_name)
+    Actions::Main.({}, {'current_user' => user, 'message' => message, 'bot' => bot})
+    @user
   end
 end

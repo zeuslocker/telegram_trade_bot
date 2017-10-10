@@ -10,7 +10,7 @@ class MainListener
   REVERT_PAYMENT_PAGE = I18n.t('revert_page').freeze
   PAYMENT_CODE = 'payment_code'.freeze
   PAYMENT_CODE_FORMAT = /^[0-2][0-9]:\d/
-
+  PAY_FROM_BALANCE = I18n.t('pay_from_balance').freeze
   attr_reader :bot, :message, :user
 
   def initialize(bot, message, user)

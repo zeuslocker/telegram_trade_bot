@@ -14,11 +14,16 @@ class Actions::SellTreasure < Trailblazer::Operation
   step :build_report
   step :setup_treasure_price!
   step :payment_present?
-  step :setup_keyboard!
-  success :send_responce!
+  success TrailblazerHelpers::Operations::SendTreasure
   success TrailblazerHelpers::Operations::ResetUserChooses
-  success :setup_allowed_messages!
-  success :make_after_actions!
+  success TrailblazerHelpers::Operations::AfterTreasureSoldActions
+  success Nested(::Actions::Main, input: ->(options, **) do
+    {
+      current_user: options['current_user'],
+      bot: options['bot'],
+      message: options['message']
+    }
+  end)
 
   def check_pay_code_lock!(options, current_user:, bot:, message:, **)
     if check_pay_code_lock_condition(current_user)
@@ -109,32 +114,13 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def update_user_balance(user, row, treasure_price)
-    user.update(balance: (user.balance + treasure_price - row_get_sum(row)))
+    user.update(balance: (user.balance + row_get_sum(row) - treasure_price))
   end
 
   def payment_not_found(bot, message, current_user)
     bot.api.sendMessage(default_message(message, I18n.t('payment_not_found')))
-    binding.pry
     current_user.update(allowed_messages: (current_user.allowed_messages << MainListener::HOW_TO_PAY_COMMAND))
     current_user.update(pay_code_lock: Time.current)
-  end
-
-  def setup_keyboard!(options, **)
-    options['key_board'] = KeyboardMarkups::Entry.new
-  end
-
-  def setup_allowed_messages!(options, current_user:, key_board:, **)
-    current_user.update(allowed_messages: key_board.buttons.flatten)
-  end
-
-  def send_responce!(_options, bot:, message:, treasure:, key_board:, **)
-    bot.api.sendMessage(default_message(message, I18n.t('payment_found')))
-    bot.api.sendMessage(default_message(message, treasure.description, key_board.perform))
-  end
-
-  def make_after_actions!(options, treasure:, current_user:, treasure_price:, **)
-    treasure.update(status: :sold)
-    current_user.update(total_order_price: current_user.total_order_price + treasure_price)
   end
 
   def date_valid?(row, message)

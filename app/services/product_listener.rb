@@ -14,6 +14,7 @@ class ProductListener
     return Actions::ProductLocationTreasures.call(nil, default_options, 'product' => product, 'location' => location) if expected_location_name?
     return Actions::ShowPayment.call(nil, default_options, 'product' => product, 'location' => location, 'treasure' => treasure) if location && product && treasure
     return Actions::Main.(nil, default_options) if message.text == MainListener::REVERT_PAYMENT_PAGE
+    return Actions::SellTreasureFromBallance.(nil, default_options, 'treasure' => Treasure.find_by(id: user.choosen_treasure_id)) if message.text == MainListener::PAY_FROM_BALANCE
   end
 
   def only_sell_treasure

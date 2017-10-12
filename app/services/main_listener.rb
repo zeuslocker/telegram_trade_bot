@@ -11,6 +11,7 @@ class MainListener
   PAYMENT_CODE = 'payment_code'.freeze
   PAYMENT_CODE_FORMAT = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])_([1-9]\d*$)/
   PAY_FROM_BALANCE = I18n.t('pay_from_balance').freeze
+  REPLENISH_BALANCE = I18n.t('replenish_balance').freeze
   attr_reader :bot, :message, :user
 
   def initialize(bot, message, user)
@@ -30,6 +31,8 @@ class MainListener
         always_listen_messages
         ProductListener.new(bot, message, user).perform
       end
+    elsif (user.allowed_messages.include? PAYMENT_CODE) && (PAYMENT_CODE_FORMAT =~ message.text) && user.choosen_product_id.nil?
+      Actions::ReplenishBalance.call(nil, default_options)
     elsif (user.allowed_messages.include? PAYMENT_CODE) && (PAYMENT_CODE_FORMAT =~ message.text)
       ProductListener.new(bot, message, user).only_sell_treasure
     end
@@ -39,12 +42,14 @@ class MainListener
 
   def always_listen_messages
     case message.text
-    when MAIN_PAGE
+    when MAIN_PAGE, REVERT_PAYMENT_PAGE
       Actions::Main.(nil, default_options)
     when RULES_PAGE
       Actions::Rules.(nil, default_options)
     when HOW_TO_PAY_PAGE, HOW_TO_PAY_COMMAND
       Actions::HowToPay.(nil, default_options)
+    when REPLENISH_BALANCE
+      Actions::ShowBalanceReplenishPayment.(nil, default_options)
     end
   end
 

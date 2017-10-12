@@ -106,8 +106,8 @@ class Actions::SellTreasure < Trailblazer::Operation
     response_body.css('table.table-layout tr').each do |row|
       return save_pay_code(row) && update_user_balance(current_user, row, treasure_price) && true if date_valid?(row, message.text) &&
                      code_valid?(row, message.text) &&
-                     sum_valid?(row, treasure_price, bot, message) &&
-                     its_new_pay_code?(row)
+                     its_new_pay_code?(row) &&
+                     sum_valid?(row, treasure_price, bot, message, current_user)
     end
     payment_not_found(bot, message, current_user)
     false
@@ -128,12 +128,13 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def code_valid?(row, message)
-    row_get_term_code(row) == message[5..-1]
+    row_get_term_code(row) == message[6..-1]
   end
 
-  def sum_valid?(row, treasure_price, bot, message)
+  def sum_valid?(row, treasure_price, bot, message, current_user)
     result = row_get_sum(row) >= treasure_price
     bot.api.sendMessage(default_message(message, I18n.t('payment_sum_invalid'))) if !result
+    current_user.update(balance: row_get_sum(row))
     result
   end
 

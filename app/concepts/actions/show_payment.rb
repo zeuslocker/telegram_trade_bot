@@ -44,9 +44,15 @@ module Actions
       current_user.update(allowed_messages: (key_board.buttons.flatten << MainListener::PAYMENT_CODE))
     end
 
-    def send_responce(_options, bot:, message:, responce_message:, key_board:, **)
+    def send_responce(_options, bot:, message:, responce_message:, key_board:, current_user:, price:, **)
+      msg = I18n.t(responce_msg(current_user.balance, price))
       bot.api.sendMessage(default_message(message, responce_message))
-      bot.api.sendMessage(default_message(message, I18n.t('confirmation_code'), key_board.perform))
+      bot.api.sendMessage(default_message(message, msg, key_board.perform))
+      #bot.api.sendMessage(default_message(message, I18n.t('confirmation_code'), key_board.perform))
+    end
+
+    def responce_msg(balance, price)
+      (balance >= price) ? 'click_pay_from_balance' : 'small_balance'
     end
   end
 end

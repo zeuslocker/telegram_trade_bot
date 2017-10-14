@@ -26,7 +26,6 @@ module BotTg
     config.load_defaults 5.1
     config.generators.system_tests = nil
     config.i18n.default_locale = :ru
-    # TO DO снять с баланса
     config.after_initialize do
       Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
         bot.listen do |message|

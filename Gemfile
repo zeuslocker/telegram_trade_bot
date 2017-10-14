@@ -32,7 +32,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'daemons', '~> 1.2', '>= 1.2.4'
 gem 'pry'
 gem 'rails-i18n'
-gem 'telegram-bot-ruby'
+gem 'telegram-bot-ruby', '0.8.4'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks

@@ -15,7 +15,7 @@ class Actions::PriceList < Trailblazer::Operation
   end
 
   def step_plucked_model!(options, model:, **)
-    options['plucked_model'] = model.pluck(:title, :price)
+    options['plucked_model'] = model.pluck(:title, :price, :desc)
   end
 
   def build_list!(options, plucked_model:, **)
@@ -38,6 +38,6 @@ class Actions::PriceList < Trailblazer::Operation
   end
 
   def product_fragment(product)
-    "<b>#{product[0]}</b>\n  1г - #{product[1]}грн.\n"
+    "<b>#{product[0]}</b>\n  1г - #{product[1]}грн.\n#{product[2]}\n\n"
   end
 end

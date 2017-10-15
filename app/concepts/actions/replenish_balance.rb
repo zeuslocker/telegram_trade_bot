@@ -4,7 +4,7 @@ class Actions::ReplenishBalance < Trailblazer::Operation
   step Callables::EasypayPaymentSignIn
   step Callables::EasypayPayHistory
   success :payment_setup
-  success Nested(::Actions::Main, input: ->(options, **) do
+  success Nested(::Actions::Main, input: lambda do |options, **|
     {
       current_user: options['current_user'],
       bot: options['bot'],
@@ -12,7 +12,7 @@ class Actions::ReplenishBalance < Trailblazer::Operation
     }
   end)
 
-  def payment_setup(options, pay_history_page:, message:, bot:, current_user:, **)
+  def payment_setup(_options, pay_history_page:, message:, bot:, current_user:, **)
     pay_history_page.css('table.table-layout tr').each do |row|
       return PayHelpers.save_pay_code(row) && update_user_balance(current_user, row, bot, message) && true if
              PayHelpers.date_valid?(row, message.text) &&

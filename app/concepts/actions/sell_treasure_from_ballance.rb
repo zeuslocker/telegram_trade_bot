@@ -7,7 +7,7 @@ module Actions
     success :update_user_ballance!
     success TrailblazerHelpers::Operations::ResetUserChooses
     success TrailblazerHelpers::Operations::AfterTreasureSoldActions
-    success Nested(::Actions::Main, input: ->(options, **) do
+    success Nested(::Actions::Main, input: lambda do |options, **|
       {
         current_user: options['current_user'],
         bot: options['bot'],
@@ -15,7 +15,7 @@ module Actions
       }
     end)
 
-    def update_user_ballance!(options, current_user:, treasure_price:, **)
+    def update_user_ballance!(_options, current_user:, treasure_price:, **)
       current_user.update(balance: current_user.balance - treasure_price)
     end
 

@@ -29,7 +29,7 @@ module Actions
     end
 
     def update_user(_options, current_user:, treasure:, **)
-      current_user.update(choosen_treasure_id: treasure.id, approval_date: Time.current) # TODO add cron
+      current_user.update(choosen_treasure_id: treasure.id, approval_date: Time.current) # TODO: add cron
     end
 
     def setup_keyboard!(options, current_user:, price:, **)
@@ -48,11 +48,11 @@ module Actions
       msg = I18n.t(responce_msg(current_user.balance, price))
       bot.api.sendMessage(default_message(message, responce_message))
       bot.api.sendMessage(default_message(message, msg, key_board.perform))
-      #bot.api.sendMessage(default_message(message, I18n.t('confirmation_code'), key_board.perform))
+      # bot.api.sendMessage(default_message(message, I18n.t('confirmation_code'), key_board.perform))
     end
 
     def responce_msg(balance, price)
-      (balance >= price) ? 'click_pay_from_balance' : 'small_balance'
+      balance >= price ? 'click_pay_from_balance' : 'small_balance'
     end
   end
 end

@@ -10,8 +10,8 @@ class UserAuthorize
   def perform
     @user = User.find_by(user_name: user_name)
     return user if user
-    @user = User.create(user_name: user_name)
-    Actions::Main.({}, {'current_user' => user, 'message' => message, 'bot' => bot})
+    @user = User.create(user_name: user_name, chat_id: message.chat.id)
+    Actions::Main.({}, 'current_user' => user, 'message' => message, 'bot' => bot)
     @user
   end
 end

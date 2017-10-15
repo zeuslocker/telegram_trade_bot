@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171012175006) do
+ActiveRecord::Schema.define(version: 20171014124306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20171012175006) do
     t.float "amount", null: false
     t.integer "location", null: false
     t.integer "status", default: 0
+    t.text "file_ids", default: [], array: true
     t.index ["product_id"], name: "index_treasures_on_product_id"
   end
 

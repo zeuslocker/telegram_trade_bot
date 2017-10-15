@@ -1,10 +1,10 @@
 class Macro
   extend DefaultMessage
 
-  def self.ParseModelParams(constant:)
+  def self.ParseModelParams(constant:, message_method: :text)
     step = ->(_input, options) do
     begin
-      options['params'] = JSON.parse(options['message'].text.gsub(constant, ''))
+      options['params'] = JSON.parse(options['message'].send(message_method).gsub(constant, ''))
     rescue StandardError => e
       options['bot'].api.sendMessage(default_message(options['message'], e.message)) && false
     end

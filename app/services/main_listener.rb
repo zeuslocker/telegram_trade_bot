@@ -3,6 +3,7 @@ class MainListener
   include Modules::DefaultOptions
 
   MAIN_PAGE = I18n.t('main_page').freeze
+  START_COMMAND = '/start'.freeze
   RULES_PAGE = I18n.t('rules_page').freeze
   HOW_TO_PAY_PAGE = I18n.t('how_to_pay').freeze
   HOW_TO_PAY_COMMAND = '/payments'.freeze
@@ -42,7 +43,7 @@ class MainListener
 
   def always_listen_messages
     case message.text
-    when MAIN_PAGE, REVERT_PAYMENT_PAGE
+    when MAIN_PAGE, REVERT_PAYMENT_PAGE, START_COMMAND
       Actions::Main.(nil, default_options)
     when RULES_PAGE
       Actions::Rules.(nil, default_options)

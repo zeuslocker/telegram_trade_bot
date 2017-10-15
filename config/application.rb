@@ -14,6 +14,7 @@ require 'pry'
 require 'telegram/bot'
 require_relative '../app/modules/default_message'
 TELEGRAM_TOKEN = '448462483:AAGYcrVZJDEZyScLYMzIElUzNLNeGLaUbNQ'.freeze
+
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -29,8 +30,12 @@ module BotTg
     config.after_initialize do
       Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
         bot.listen do |message|
-          user = UserAuthorize.new(message.from.username, bot, message).perform
-          MainListener.new(bot, message, user).perform
+          begin
+            user = UserAuthorize.new(message.from.username, bot, message).perform
+            MainListener.new(bot, message, user).perform
+          rescue Exception => e
+            bot.api.sendMessage(default_message(message, e.message))
+          end
         end
       end
     end

@@ -1,6 +1,6 @@
 module Actions
   class AddTreasure < Trailblazer::Operation
-    ADD_TREASURE = '_Xadd_treasure_|'.freeze # _Xadd_treasure_|{"product_title": "eee", "description": "sxsf44rfferg", "lat": 43.32322, "lng": 32.3434, "amount": 1, "location": "suhiv"}
+    ADD_TREASURE = '_Xadd_treasure_|'.freeze # _Xadd_treasure_|{"product_title": "🍃РОЗСИП", "description": "sxsf44rfferg", "lat": 43.32322, "lng": 32.3434, "amount": 1, "location": "suhiv"}
     include DefaultMessage
     extend ::Trailblazer::Operation::Contract::DSL
     contract Forms::TreasureForm

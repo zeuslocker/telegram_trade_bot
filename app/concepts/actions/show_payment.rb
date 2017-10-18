@@ -14,8 +14,6 @@ module Actions
         product_title: product.title,
         pay_price: TreasurePrice.call(product, treasure),
         treasure_id: treasure.id,
-        pay_method: 'EasyPay',
-        wallet: Wallet.instance.easypay,
         location: I18n.t('pay_location', location: I18n.t(location)[1..-1])
       }
     end

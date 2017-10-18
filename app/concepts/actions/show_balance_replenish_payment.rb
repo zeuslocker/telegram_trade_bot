@@ -1,6 +1,5 @@
 class Actions::ShowBalanceReplenishPayment < Trailblazer::Operation
   include DefaultMessage
-  EASY_PAY_WALLET = '50757028'.freeze
   step :setup_keyboard!
   step :setup_allowed_messages!
   step :send_responce!
@@ -15,7 +14,7 @@ class Actions::ShowBalanceReplenishPayment < Trailblazer::Operation
 
   def send_responce!(_options, bot:, message:, key_board:, **)
     bot.api.sendMessage(default_message(message, I18n.t('replenish_balance_info',
-                                                        wallet: EASY_PAY_WALLET,
+                                                        wallet: Rails.application.secrets[:easy_pay_wallet],
                                                         pay_method: 'EasyPay'), key_board.perform))
   end
 end

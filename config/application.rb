@@ -26,7 +26,7 @@ module BotTg
     include DefaultMessage
     config.load_defaults 5.1
     config.generators.system_tests = nil
-    config.i18n.default_locale = :ru
+    config.i18n.default_locale = :ua
     config.after_initialize do
       Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
         bot.listen do |message|
@@ -34,7 +34,9 @@ module BotTg
             user = UserAuthorize.new(message.from.username, bot, message).perform
             MainListener.new(bot, message, user).perform
           rescue Exception => e
-            bot.api.sendMessage(default_message(message, e.message))
+            Rails.logger.error e.message
+            Rails.logger.error e.backtrace.join("\n")
+            bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
           end
         end
       end

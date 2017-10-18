@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: bot_tg_production
-  username: bot_tg
-  password: <%= ENV['BOT_TG_DATABASE_PASSWORD'] %>
+  # username: bot_tg
+  # password: <%= ENV['BOT_TG_DATABASE_PASSWORD'] %>

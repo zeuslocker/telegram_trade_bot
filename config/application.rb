@@ -36,7 +36,10 @@ module BotTg
           rescue Exception => e
             Rails.logger.error e.message
             Rails.logger.error e.backtrace.join("\n")
-            bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
+            begin
+              bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
+            rescue Exception => e
+            end
           end
         end
       end

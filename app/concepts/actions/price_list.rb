@@ -38,6 +38,6 @@ class Actions::PriceList < Trailblazer::Operation
   end
 
   def product_fragment(product)
-    "<b>#{product[0]}</b>\n  1г - #{product[1]}грн.\n#{product[2]}\n\n"
+    "<b>#{product[0]}</b>\n1г - #{product[1]}грн.\n#{product[2]}\n\n"
   end
 end

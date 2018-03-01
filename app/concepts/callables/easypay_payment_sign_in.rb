@@ -20,12 +20,12 @@ class Callables::EasypayPaymentSignIn
       http.request(request1)
     end
     request_verification_token = CGI::Cookie::parse(response1['Set-Cookie'])['HttpOnly, __RequestVerificationToken'].first
-    sid = CGI::Cookie::parse(response1['Set-Cookie'])['SID'].first
+    options['sid'] = CGI::Cookie::parse(response1['Set-Cookie'])['SID'].first
     uri = URI.parse("https://easypay.ua/auth/signin")
-    request_verification_token_for_form = Nokogiri::HTML(response1.body.force_encoding(Encoding::UTF_8)).at('input[@name="__RequestVerificationToken"]')['value']
+    options['request_verification_token_for_form'] = Nokogiri::HTML(response1.body.force_encoding(Encoding::UTF_8)).at('input[@name="__RequestVerificationToken"]')['value']
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/x-www-form-urlencoded"
-    request["Cookie"] = "SID=#{sid}; __RequestVerificationToken=#{request_verification_token}"
+    request["Cookie"] = "SID=#{options['sid']}; __RequestVerificationToken=#{request_verification_token}"
     request["Origin"] = "https://easypay.ua"
     request["Accept-Language"] = "en-US,en;q=0.9"
     request["Upgrade-Insecure-Requests"] = "1"
@@ -35,7 +35,7 @@ class Callables::EasypayPaymentSignIn
     request["Referer"] = "https://easypay.ua/auth/signin"
     request["Connection"] = "keep-alive"
     request.set_form_data(
-      "__RequestVerificationToken" => request_verification_token_for_form,
+      "__RequestVerificationToken" => options['request_verification_token_for_form'],
       "gresponse" => "",
       "login" => PayHelpers::EASYPAY_LOGIN,
       "password" => PayHelpers::EASYPAY_PASSWORD,

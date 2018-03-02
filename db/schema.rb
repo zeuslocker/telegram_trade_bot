@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209095933) do
+ActiveRecord::Schema.define(version: 20180302081958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,6 @@ ActiveRecord::Schema.define(version: 20171209095933) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "user_name", null: false
     t.float "balance", default: 0.0, null: false
     t.float "total_order_price", default: 0.0, null: false
     t.datetime "created_at", null: false
@@ -57,7 +56,8 @@ ActiveRecord::Schema.define(version: 20171209095933) do
     t.text "allowed_messages", default: [], array: true
     t.datetime "pay_code_lock"
     t.string "chat_id", null: false
-    t.index ["user_name"], name: "index_users_on_user_name", unique: true
+    t.string "telegram_id", null: false
+    t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
   end
 
   create_table "wallets", force: :cascade do |t|

@@ -1,16 +1,16 @@
 class UserAuthorize
-  attr_reader :user_name, :user, :bot, :message
+  attr_reader :telegram_id, :user, :bot, :message
 
-  def initialize(user_name, bot, message)
-    @user_name = user_name
+  def initialize(telegram_id, bot, message)
+    @telegram_id = telegram_id
     @bot = bot
     @message = message
   end
 
   def perform
-    @user = User.find_by(user_name: user_name)
+    @user = User.find_by(telegram_id: telegram_id)
     return user if user
-    @user = User.create(user_name: user_name, chat_id: message.chat.id)
+    @user = User.create(telegram_id: telegram_id, chat_id: message.chat.id)
     Actions::Main.({}, 'current_user' => user, 'message' => message, 'bot' => bot)
     @user
   end

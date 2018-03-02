@@ -19,7 +19,7 @@ module PayHelpers
   end
 
   def self.pay_code_minutes_left(current_user)
-    ((current_user.pay_code_lock - (Time.current - PAY_LOCK_TIME.minutes)) / 60).truncate
+    ((current_user.pay_code_lock - (Time.current - (PAY_LOCK_TIME + 1).minutes)) / 60).truncate
   end
 
   def self.date_valid?(row, message)

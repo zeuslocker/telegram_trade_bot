@@ -15,5 +15,6 @@ class SpecialMessageListener
     Actions::AddTreasure.call({}, default_options) if message.text&.start_with?(Actions::AddTreasure::ADD_TREASURE)
     Actions::AddPhotoToTreasure.call({}, default_options) if message.caption&.start_with?(Actions::AddPhotoToTreasure::ADD_PHOTO_TREASURE)
     Actions::Broadcast.call({}, default_options) if message.text&.start_with?(Actions::Broadcast::BROADCAST_MESSAGE)
+    Actions::ShowGeneralInfo.call({}, default_options) if message.text&.start_with?(Actions::ShowGeneralInfo::GENERAL_INFO_MESSAGE)
   end
 end

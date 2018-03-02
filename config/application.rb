@@ -31,7 +31,7 @@ module BotTg
       Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
         bot.listen do |message|
           begin
-            user = UserAuthorize.new(message.from.username, bot, message).perform
+            user = UserAuthorize.new(message.from.id, bot, message).perform
             MainListener.new(bot, message, user).perform
           rescue Exception => e
             Rails.logger.error e.message

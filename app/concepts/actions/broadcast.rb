@@ -18,7 +18,7 @@ class Actions::Broadcast < Trailblazer::Operation
 
   def send_broadcast!(_options, message:, model:, bot:, text:, **)
     model.each do |user|
-      bot.api.sendMessage(chat_id: user.chat_id, text: text)
+      bot.api.sendMessage(chat_id: user.telegram_id, text: text)
     end
   end
 end

@@ -34,7 +34,7 @@ class MainListener
       end
     elsif (user.allowed_messages.include? PAYMENT_CODE) && (PAYMENT_CODE_FORMAT =~ message.text) && user.choosen_product_id.nil?
       Actions::ReplenishBalance.call(nil, default_options)
-    elsif user.allowed_messages.blank?
+    elsif user.allowed_messages.blank? || message.text == START_COMMAND
       Actions::Main.(nil, default_options)
       # elsif (user.allowed_messages.include? PAYMENT_CODE) && (PAYMENT_CODE_FORMAT =~ message.text)
       #  ProductListener.new(bot, message, user).only_sell_treasure

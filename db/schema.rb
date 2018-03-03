@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180302081958) do
+ActiveRecord::Schema.define(version: 20180302081959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 20180302081958) do
     t.datetime "approval_date"
     t.text "allowed_messages", default: [], array: true
     t.datetime "pay_code_lock"
-    t.string "chat_id", null: false
     t.string "telegram_id", null: false
+    t.string "first_name"
     t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
   end
 

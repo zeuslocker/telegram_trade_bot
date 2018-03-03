@@ -9,8 +9,9 @@ class UserAuthorize
 
   def perform
     @user = User.find_by(telegram_id: telegram_id)
-    return user if user
-    @user = User.create(telegram_id: telegram_id, chat_id: message.chat.id)
+    return user if user && user.first_name
+    return user.update(first_name: message.from.first_name) && user if user
+    @user = User.create(telegram_id: telegram_id, first_name: message.from.first_name)
     Actions::Main.({}, 'current_user' => user, 'message' => message, 'bot' => bot)
     @user
   end

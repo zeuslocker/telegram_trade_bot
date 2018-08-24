@@ -28,6 +28,14 @@ module BotTg
     config.generators.system_tests = nil
     config.i18n.default_locale = :ua
     config.after_initialize do
+      begin
+        bot_listener
+      rescue Exception => e
+        retry
+      end
+    end
+
+    def bot_listener
       Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
         bot.listen do |message|
           begin

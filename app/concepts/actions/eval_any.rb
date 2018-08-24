@@ -6,7 +6,7 @@ module Actions
     step :send_responce!
 
     def send_responce!(_options, bot:, message:, **)
-      bot.api.sendMessage(default_message(message, eval(message.text.gsub(EVAL_ANY_COMMAND, ''))))
+      bot.api.sendMessage(default_message(message, "|#{eval(message.text.gsub(EVAL_ANY_COMMAND, ''))}|"))
     end
   end
 end

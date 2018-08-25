@@ -27,30 +27,30 @@ module BotTg
     config.load_defaults 5.1
     config.generators.system_tests = nil
     config.i18n.default_locale = :ua
-    config.after_initialize do
-      begin
-        bot_listener
-      rescue Exception => e
-        retry
-      end
-    end
+    # config.after_initialize do
+    #   begin
+    #     bot_listener
+    #   rescue Exception => e
+    #     retry
+    #   end
+    # end
 
-    def bot_listener
-      Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
-        bot.listen do |message|
-          begin
-            user = UserAuthorize.new(message.from.id, bot, message).perform
-            MainListener.new(bot, message, user).perform
-          rescue Exception => e
-            Rails.logger.error e.message
-            Rails.logger.error e.backtrace.join("\n")
-            begin
-              bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
-            rescue Exception => e
-            end
-          end
-        end
-      end
-    end
+    # def bot_listener
+    #   Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
+    #     bot.listen do |message|
+    #       begin
+    #         user = UserAuthorize.new(message.from.id, bot, message).perform
+    #         MainListener.new(bot, message, user).perform
+    #       rescue Exception => e
+    #         Rails.logger.error e.message
+    #         Rails.logger.error e.backtrace.join("\n")
+    #         begin
+    #           bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
+    #         rescue Exception => e
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
   end
 end

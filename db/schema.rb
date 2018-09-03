@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180302081959) do
+ActiveRecord::Schema.define(version: 20180826133844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,33 @@ ActiveRecord::Schema.define(version: 20180302081959) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "desc"
+  end
+
+  create_table "site_bots", force: :cascade do |t|
+    t.jsonb "secret_commands", null: false
+    t.bigint "site_user_id"
+    t.integer "status"
+    t.float "total_income"
+    t.string "easy_number"
+    t.string "easy_password"
+    t.string "tg_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_user_id"], name: "index_site_bots_on_site_user_id"
+    t.index ["tg_token"], name: "index_site_bots_on_tg_token", unique: true
+  end
+
+  create_table "site_users", force: :cascade do |t|
+    t.string "username", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "tg_nickname"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reset_password_token"], name: "index_site_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_site_users_on_username", unique: true
   end
 
   create_table "treasures", force: :cascade do |t|
@@ -66,5 +93,6 @@ ActiveRecord::Schema.define(version: 20180302081959) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "site_bots", "site_users"
   add_foreign_key "treasures", "products"
 end

@@ -1,6 +1,23 @@
 class Macro
   extend DefaultMessage
 
+  def self.Debug
+    step = lambda do |_input, options|
+      binding.pry if Rails.env.test? || Rails.env.development? # defence from fools :)
+      true
+    end
+
+    [step, name: "debug"]
+  end
+
+  def self.Authenticate(user_key)
+    step = lambda do |_input, options|
+      options['authenticate.result'] = options[user_key].present?
+    end
+
+    [step, name: "authenticate.#{user_key}"]
+  end
+
   def self.ParseModelParams(constant:, message_method: :text)
     step = lambda do |_input, options|
       begin

@@ -1,0 +1,17 @@
+.row.justify-content-center
+  .col-4
+    %h2.text-center Регистрация
+    = form_for(@model, url: site_bot_path, html: {autocomplete: 'off'}) do |f|
+      .form-group
+        = f.label :easy_number, 'EasyPay логин(телефон) в формате 380XXXXXXXXX'
+        %br/
+        = f.text_field :easy_number, autofocus: true, class: "form-control", required: true
+      .form-group
+        = f.label :easy_password, "EasyPay пароль"
+        %br/
+        = f.password_field :easy_password, class: "form-control", required: true
+      .form-group
+        = f.label :tg_token, "Telegram токен"
+        = f.text_field :tg_token, class: "form-control", required: true
+      .form-group
+        = f.submit "Создать", class: "btn btn-primary"

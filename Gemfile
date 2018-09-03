@@ -7,7 +7,7 @@ end
 
 gem 'devise'
 gem 'mini_racer'
-gem "cells-hamlit"
+gem "cells-haml"
 gem "cells-rails"
 gem 'jquery-rails'
 gem 'bootstrap'

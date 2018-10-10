@@ -87,3 +87,37 @@ TSX. Контакт підтримки - @PSYJET.
   pay_from_balance: '💳 Оплатити з балансу'
   click_pay_from_balance: 'Для покупки натисніть <b>💳 Оплатити з балансу</b>'
   small_balance: 'Сума на балансі не достатня, поповніть Ваш баланс.'
+  errors:
+    messages:
+      not_saved: ''
+  activerecord:
+    errors:
+      models:
+        site_user:
+          attributes:
+            password:
+              too_short: 'слишком короткий. Минимум 6 символов.'
+            username:
+              taken: 'Пользователь с таким именем уже существует'
+        site_bot:
+          attributes:
+            tg_token:
+              taken: 'Бот с таким токеном уже существует'
+  activemodel:
+    errors:
+      models:
+        site_bot/create_contract:
+          attributes:
+            easy_number:
+              wrong_length: 'не верная длина EasyPay номера'
+        site_bot:
+          attributes:
+            easy_number:
+              wrong_length: 'не верная длина EasyPay номера'
+  forms:
+    site_bot/create_contract:
+      easy_number:
+        wrong_format: 'не верный формат EasyPay номера'
+        without_access: 'не верный логин или пароль от EasyPay'
+      tg_token:
+        invalid: 'не существует'

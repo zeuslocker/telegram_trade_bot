@@ -1,8 +1,8 @@
 module PayHelpers
   extend DefaultMessage
   EASYPAY_WALLET_ID = Rails.application.secrets[:easypay_wallet_id].freeze
-  EASYPAY_SIGN_IN_URL = URI.parse("https://easypay.ua/auth/signin")
-  EASYPAY_ROOT_URL = "https://easypay.ua/"
+  EASYPAY_ROOT_URL = "#{PayHelpers::EASYPAY_ROOT_URL}"
+  EASYPAY_SIGN_IN_URL = URI.parse("#{EASYPAY_ROOT_URL}auth/signin")
   EASYPAY_LOGIN =  Rails.application.secrets[:easypay_login].freeze
   EASYPAY_PASSWORD = Rails.application.secrets[:easypay_password].freeze
   PAY_LOCK_TIME = 5

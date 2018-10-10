@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180826133844) do
+ActiveRecord::Schema.define(version: 20181006130800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,13 +33,16 @@ ActiveRecord::Schema.define(version: 20180826133844) do
   create_table "site_bots", force: :cascade do |t|
     t.jsonb "secret_commands", null: false
     t.bigint "site_user_id"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
     t.float "total_income"
     t.string "easy_number"
     t.string "easy_password"
     t.string "tg_token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "last_request_verification_token_for_form"
+    t.string "last_cookie"
+    t.string "wallet_id", null: false
     t.index ["site_user_id"], name: "index_site_bots_on_site_user_id"
     t.index ["tg_token"], name: "index_site_bots_on_tg_token", unique: true
   end

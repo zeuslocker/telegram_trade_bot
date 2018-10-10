@@ -31,24 +31,16 @@ module BotTg
     #   begin
     #     bot_listener
     #   rescue Exception => e
-    #     retry
+    #     binding.pry
+    #     #retry
     #   end
     # end
-
+    #
     # def bot_listener
     #   Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
     #     bot.listen do |message|
-    #       begin
     #         user = UserAuthorize.new(message.from.id, bot, message).perform
-    #         MainListener.new(bot, message, user).perform
-    #       rescue Exception => e
-    #         Rails.logger.error e.message
-    #         Rails.logger.error e.backtrace.join("\n")
-    #         begin
-    #           bot.api.sendMessage(chat_id: message.chat.id, text: e.message)
-    #         rescue Exception => e
-    #         end
-    #       end
+    #         MainListener.new(bot, message, user, SiteBot.last).perform
     #     end
     #   end
     # end

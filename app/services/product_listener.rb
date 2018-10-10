@@ -1,13 +1,14 @@
 class ProductListener
   include Modules::DefaultOptions
   TREASURE_MESSAGE_VALUES = /\d+\.\d+|\d+/
-  attr_reader :bot, :message, :user, :current_choosen_location
+  attr_reader :bot, :message, :user, :current_choosen_location, :site_bot
 
-  def initialize(bot, message, user)
+  def initialize(bot, message, user, site_bot)
     @bot = bot
     @message = message
     @user = user
     @current_choosen_location = user.choosen_location
+    @site_bot = site_bot
   end
 
   def perform
@@ -20,7 +21,8 @@ class ProductListener
   def only_sell_treasure
     Actions::SellTreasure.(nil,
                            default_options,
-                           'treasure' => Treasure.find_by(id: user.choosen_treasure_id))
+                           'treasure' => Treasure.find_by(id: user.choosen_treasure_id),
+                           'site_bot' => site_bot)
   end
 
   def product

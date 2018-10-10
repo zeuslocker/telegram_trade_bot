@@ -4,7 +4,8 @@ module Modules
       {
         'bot' => bot,
         'current_user' => user,
-        'message' => message
+        'message' => message,
+        'site_bot' => site_bot
       }
     end
   end

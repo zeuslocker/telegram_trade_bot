@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'sass-rails'
+gem 'faraday'
 gem 'devise'
 gem 'mini_racer'
 gem "cells-haml"

@@ -6,10 +6,10 @@ class SiteBot
     step Contract::Build(constant: CreateContract, builder: :default_contract!)
     step Contract::Validate(key: :site_bot)
     step Contract::Persist()
-    step :start_bot
+    success :start_bot
 
     def start_bot(options, model:, **)
-
+      SiteBotsSupervisor.instance.add_bot(model.id)
     end
 
     def default_contract!(_options, constant:, current_user:, model:, **)

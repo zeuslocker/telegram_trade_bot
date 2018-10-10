@@ -1,8 +1,18 @@
 class Actions::ReplenishBalance < Trailblazer::Operation
   include DefaultMessage
   step Callables::CheckPayCodeLock
-  step Callables::EasypayPaymentSignIn
-  step Callables::EasypayPayHistory
+  success Nested(Operations::EasyPayHistory, input: lambda do |options, **|
+    {
+      site_bot: options['site_bot'],
+      bot: options['bot'],
+      message: options['message']
+    }
+  end,
+  output: ->(options, mutable_data:, **) do
+    {
+      'pay_history_page' => mutable_data['pay_history_page']
+    }
+  end)
   success :payment_setup
   success Nested(::Actions::Main, input: lambda do |options, **|
     {

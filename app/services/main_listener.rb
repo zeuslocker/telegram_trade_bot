@@ -13,12 +13,13 @@ class MainListener
   PAYMENT_CODE_FORMAT = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])_([1-9]\d*$)/
   PAY_FROM_BALANCE = I18n.t('pay_from_balance').freeze
   REPLENISH_BALANCE = I18n.t('replenish_balance').freeze
-  attr_reader :bot, :message, :user
+  attr_reader :bot, :message, :user, :site_bot
 
-  def initialize(bot, message, user)
+  def initialize(bot, message, user, site_bot)
     @bot = bot
     @message = message
     @user = user
+    @site_bot = site_bot
   end
 
   def perform # rubocop:disable Metrics/AbcSize
@@ -30,7 +31,7 @@ class MainListener
         ProductTitleListener.new(bot, message, user).perform
       else
         always_listen_messages
-        ProductListener.new(bot, message, user).perform
+        ProductListener.new(bot, message, user, site_bot).perform
       end
     elsif (user.allowed_messages.include? PAYMENT_CODE) && (PAYMENT_CODE_FORMAT =~ message.text) && user.choosen_product_id.nil?
       Actions::ReplenishBalance.call(nil, default_options)

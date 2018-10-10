@@ -4,7 +4,11 @@ class SiteBotCell < Cell::ViewModel
   end
 
   def show
-    binding.pry
     render
+  end
+
+  def show_errors(field_name)
+    content_tag(:i, @model.errors.messages[field_name].join(', '), class: 'form-error') if
+      @model.errors.messages[field_name].present?
   end
 end

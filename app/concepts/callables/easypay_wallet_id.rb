@@ -1,11 +1,11 @@
-class Callables::EasypayPayHistory
-  extend DefaultMessage
+require 'nokogiri'
+
+class Callables::EasypayWalletId
   extend Uber::Callable
 
-  def self.call(options, bot:, message:, request_verification_token_for_form:, cookie:, site_bot:, **)
-    bot.api.sendMessage(default_message(message, I18n.t('payment_checking')))
+  def self.call(options, site_bot:, request_verification_token_for_form:, cookie:, **)
     time_current = Time.current
-    uri = URI.parse("#{PayHelpers::EASYPAY_ROOT_URL}wallets/buildreport?walletId=#{site_bot.wallet_id}&month=#{time_current.month}&year=#{time_current.year}")
+    uri = URI.parse("#{PayHelpers::EASYPAY_ROOT_URL}home")
     request = Net::HTTP::Post.new(uri)
     request.content_type = 'application/x-www-form-urlencoded'
     request['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
@@ -31,7 +31,6 @@ class Callables::EasypayPayHistory
       http.request(request)
     end
 
-    options['pay_history_page'] = Nokogiri::HTML(response.body.force_encoding('UTF-8'))
-    options['response_code'] = response.code.to_i
+    options['wallet_id'] = Nokogiri::HTML(response.body.force_encoding('UTF-8')).at('ul.popup-menu > :first-child a')['href'][/([^\/]+)$/]
   end
 end

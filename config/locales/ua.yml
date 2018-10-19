@@ -88,6 +88,7 @@ TSX. Контакт підтримки - @PSYJET.
   click_pay_from_balance: 'Для покупки натисніть <b>💳 Оплатити з балансу</b>'
   small_balance: 'Сума на балансі не достатня, поповніть Ваш баланс.'
   errors:
+    format: "%{message}"
     messages:
       not_saved: ''
   activerecord:
@@ -106,6 +107,10 @@ TSX. Контакт підтримки - @PSYJET.
   activemodel:
     errors:
       models:
+        forms/product:
+          attributes:
+            title:
+              taken: 'Товар с таким именем уже существует'
         site_bot/create_contract:
           attributes:
             easy_number:

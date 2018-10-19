@@ -8,7 +8,8 @@ class Operations::EasyPayHistory < Trailblazer::Operation
     response = history_request(site_bot.last_request_verification_token_for_form,
                                site_bot.last_cookie,
                                site_bot.easy_number,
-                               site_bot.easy_password)
+                               site_bot.easy_password,
+                               site_bot.wallet_id)
     if(response.code.to_i == 200)
       options['pay_history_page'] = Nokogiri::HTML(response.body.force_encoding('UTF-8'))
     else
@@ -16,7 +17,8 @@ class Operations::EasyPayHistory < Trailblazer::Operation
       response = history_request(credentials[:request_verification_token_for_form],
                                  credentials[:cookie],
                                  site_bot.easy_number,
-                                 site_bot.easy_password)
+                                 site_bot.easy_password,
+                                 site_bot.wallet_id)
       options['pay_history_page'] = Nokogiri::HTML(response.body.force_encoding('UTF-8'))
 
       site_bot.update(
@@ -76,9 +78,9 @@ class Operations::EasyPayHistory < Trailblazer::Operation
     {cookie: response['Set-Cookie'], request_verification_token_for_form: request_verification_token_for_form}
   end
 
-  def history_request(request_verification_token_for_form, cookie, easy_number, easy_password)
+  def history_request(request_verification_token_for_form, cookie, easy_number, easy_password, easy_wallet_id)
     time_current = Time.current
-    uri = URI.parse("#{PayHelpers::EASYPAY_ROOT_URL}wallets/buildreport?walletId=#{PayHelpers::EASYPAY_WALLET_ID}&month=#{time_current.month}&year=#{time_current.year}")
+    uri = URI.parse("#{PayHelpers::EASYPAY_ROOT_URL}wallets/buildreport?walletId=#{easy_wallet_id}&month=#{time_current.month}&year=#{time_current.year}")
     request = Net::HTTP::Post.new(uri)
     request.content_type = 'application/x-www-form-urlencoded'
     request['Accept'] = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'

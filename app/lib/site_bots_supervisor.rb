@@ -34,6 +34,10 @@ class SiteBotsSupervisor
     end
   end
 
+  def terminate_all_bots
+    @site_bots.each{|x| x[:thread].terminate }
+  end
+
   def bot_thread(site_bot)
     Thread.new do
       Rails.application.executor.wrap do

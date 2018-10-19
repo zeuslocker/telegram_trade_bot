@@ -26,7 +26,7 @@ class ProductListener
   end
 
   def product
-    @product ||= Product.find(user.choosen_product_id)
+    @product ||= site_bot.products.find(user.choosen_product_id)
   end
 
   def location

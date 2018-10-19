@@ -23,7 +23,7 @@ class MainListener
   end
 
   def perform # rubocop:disable Metrics/AbcSize
-    SpecialMessageListener.new(bot, message, user).perform if user.choosen_product_id.nil?
+    SpecialMessageListener.new(bot, message, user, site_bot).perform if user.choosen_product_id.nil?
     if user.allowed_messages.include? message.text
       if user.choosen_product_id.nil? # when product not choosen
         always_listen_messages

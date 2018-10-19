@@ -34,12 +34,12 @@ class Actions::SellTreasure < Trailblazer::Operation
     options['treasure_price'] = TreasurePrice.call(treasure.product, treasure)
   end
 
-  def payment_present?(_options, pay_history_page:, message:, treasure:, treasure_price:, bot:, current_user:, **)
+  def payment_present?(_options, pay_history_page:, message:, treasure:, treasure_price:, bot:, current_user:, site_bot:, **)
     pay_history_page.css('table.table-layout tr').each do |row|
-      return PayHelpers.save_pay_code(row) && update_user_balance(current_user, row, treasure_price) && true if
+      return PayHelpers.save_pay_code(row, site_bot.id) && update_user_balance(current_user, row, treasure_price) && true if
              PayHelpers.date_valid?(row, message.text) &&
              PayHelpers.code_valid?(row, message.text) &&
-             PayHelpers.its_new_pay_code?(row) &&
+             PayHelpers.its_new_pay_code?(row, site_bot.id) &&
              sum_valid?(row, treasure_price, bot, message, current_user)
     end
     payment_not_found(bot, message, current_user)

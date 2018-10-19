@@ -1,16 +1,16 @@
 module Actions
   class RemoveProduct < ::Trailblazer::Operation
-    REMOVE_PRODUCT = '_Xremove_product_|'.freeze # _Xremove_product_|{"title": "eee"}
+    # _Xremove_product_|{"title": "eee"}
     include DefaultMessage
 
-    step ::Macro::ParseModelParams(constant: REMOVE_PRODUCT), fail_fast: true
+    step ::Macro::ParseModelParams(constant: SpecialMessageListener::REMOVE_PRODUCT), fail_fast: true
     step :setup_model!
     failure :model_not_found!
     step :destroy_model!
     step :send_responce!
 
-    def setup_model!(options, params:, **)
-      options['model'] = Product.find_by(title: params['title'])
+    def setup_model!(options, params:, site_bot:, **)
+      options['model'] = Product.find_by(title: params['title'], site_bot_id: site_bot.id)
     end
 
     def model_not_found!(_options, bot:, message:, **)

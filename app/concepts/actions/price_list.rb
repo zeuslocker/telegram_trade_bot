@@ -8,10 +8,10 @@ class Actions::PriceList < Trailblazer::Operation
   step :setup_allowed_messages!
   step :send_responce!
 
-  def setup_model!(options, **)
-    options['model'] = ::Product.joins(:treasures)
-                                .where(treasures: { status: :available })
-                                .distinct
+  def setup_model!(options, site_bot:, **)
+    options['model'] = site_bot.products.joins(:treasures)
+                                        .where(treasures: { status: :available })
+                                        .distinct
   end
 
   def step_plucked_model!(options, model:, **)

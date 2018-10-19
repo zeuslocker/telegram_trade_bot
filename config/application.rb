@@ -14,7 +14,7 @@ require 'pry'
 require 'telegram/bot'
 require_relative '../app/modules/default_message'
 TELEGRAM_TOKEN = '448462483:AAGYcrVZJDEZyScLYMzIElUzNLNeGLaUbNQ'.freeze
-
+END { ::SiteBotsSupervisor.instance.terminate_all_bots }
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems

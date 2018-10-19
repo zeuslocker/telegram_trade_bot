@@ -1,14 +1,12 @@
 class Actions::ShowGeneralInfo < Trailblazer::Operation
   include DefaultMessage
 
-  GENERAL_INFO_MESSAGE = '_Xshow_gemeral_infoXX3_'.freeze
-
   success :setup_model!
   success :setup_responce_message!
   success :send_responce!
 
-  def setup_model!(options, **)
-    options['model'] = ::User.all
+  def setup_model!(options, site_bot:, **)
+    options['model'] = site_bot.users.all
   end
 
   def setup_responce_message!(options, model:, **)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181006130800) do
+ActiveRecord::Schema.define(version: 20181019064358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20181006130800) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "term_code"
+    t.bigint "site_bot_id"
+    t.index ["site_bot_id"], name: "index_pay_codes_on_site_bot_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -28,6 +30,8 @@ ActiveRecord::Schema.define(version: 20181006130800) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "desc"
+    t.bigint "site_bot_id"
+    t.index ["site_bot_id"], name: "index_products_on_site_bot_id"
   end
 
   create_table "site_bots", force: :cascade do |t|
@@ -71,7 +75,9 @@ ActiveRecord::Schema.define(version: 20181006130800) do
     t.integer "location", null: false
     t.integer "status", default: 0
     t.text "file_ids", default: [], array: true
+    t.bigint "site_bot_id"
     t.index ["product_id"], name: "index_treasures_on_product_id"
+    t.index ["site_bot_id"], name: "index_treasures_on_site_bot_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -87,15 +93,15 @@ ActiveRecord::Schema.define(version: 20181006130800) do
     t.datetime "pay_code_lock"
     t.string "telegram_id", null: false
     t.string "first_name"
-    t.index ["telegram_id"], name: "index_users_on_telegram_id", unique: true
+    t.bigint "site_bot_id"
+    t.index ["site_bot_id"], name: "index_users_on_site_bot_id"
+    t.index ["telegram_id"], name: "index_users_on_telegram_id"
   end
 
-  create_table "wallets", force: :cascade do |t|
-    t.integer "easypay"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+  add_foreign_key "pay_codes", "site_bots"
+  add_foreign_key "products", "site_bots"
   add_foreign_key "site_bots", "site_users"
   add_foreign_key "treasures", "products"
+  add_foreign_key "treasures", "site_bots"
+  add_foreign_key "users", "site_bots"
 end

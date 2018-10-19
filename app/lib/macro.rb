@@ -20,8 +20,9 @@ class Macro
 
   def self.ParseModelParams(constant:, message_method: :text)
     step = lambda do |_input, options|
+      site_bot = options['site_bot']
       begin
-        options['params'] = JSON.parse(options['message'].send(message_method).gsub(constant, ''))
+        options['params'] = JSON.parse(options['message'].send(message_method).gsub(site_bot.secret_commands[constant], ''))
       rescue StandardError => e
         options['bot'].api.sendMessage(default_message(options['message'], e.message)) && false
       end

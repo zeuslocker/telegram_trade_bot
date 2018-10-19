@@ -14,6 +14,6 @@ class ProductTitleListener
   end
 
   def product
-    @product ||= Product.find_by(title: message.text)
+    @product ||= Product.find_by(title: message.text, site_bot_id: user.site_bot.id)
   end
 end

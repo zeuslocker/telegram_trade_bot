@@ -22,12 +22,12 @@ class Actions::ReplenishBalance < Trailblazer::Operation
     }
   end)
 
-  def payment_setup(_options, pay_history_page:, message:, bot:, current_user:, **)
+  def payment_setup(_options, pay_history_page:, message:, bot:, current_user:, site_bot:, **)
     pay_history_page.css('table.table-layout tr').each do |row|
-      return PayHelpers.save_pay_code(row) && update_user_balance(current_user, row, bot, message) && true if
+      return PayHelpers.save_pay_code(row, site_bot.id) && update_user_balance(current_user, row, bot, message) && true if
              PayHelpers.date_valid?(row, message.text) &&
              PayHelpers.code_valid?(row, message.text) &&
-             PayHelpers.its_new_pay_code?(row)
+             PayHelpers.its_new_pay_code?(row, site_bot.id)
     end
     PayHelpers.payment_not_found(bot, message, current_user)
   end

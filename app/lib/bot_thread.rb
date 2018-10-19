@@ -9,7 +9,7 @@ class BotThread
     ::Telegram::Bot::Client.run(@site_bot.tg_token) do |bot|
       bot.listen do |message|
         begin
-          user = UserAuthorize.new(message.from.id, bot, message).perform
+          user = UserAuthorize.new(message.from.id, bot, message, @site_bot.id).perform
           MainListener.new(bot, message, user, @site_bot).perform
         rescue Exception => e
           BotLogger.logger.error "Error site_bot.id: #{@site_bot.id}"

@@ -1,10 +1,7 @@
 module PayHelpers
   extend DefaultMessage
-  EASYPAY_WALLET_ID = Rails.application.secrets[:easypay_wallet_id].freeze
   EASYPAY_ROOT_URL = "https://partners.easypay.ua/"
   EASYPAY_SIGN_IN_URL = URI.parse("#{EASYPAY_ROOT_URL}auth/signin")
-  EASYPAY_LOGIN =  Rails.application.secrets[:easypay_login].freeze
-  EASYPAY_PASSWORD = Rails.application.secrets[:easypay_password].freeze
   PAY_LOCK_TIME = 2
 
   def self.check_pay_code_locked?(current_user)
@@ -42,13 +39,15 @@ module PayHelpers
     row_get_term_code(row) == message[6..-1]
   end
 
-  def self.its_new_pay_code?(row)
+  def self.its_new_pay_code?(row, site_bot_id)
     !PayCode.exists?(payed_at: DateTime.parse(row_get_date(row)),
-                     term_code: row_get_term_code(row))
+                     term_code: row_get_term_code(row),
+                     site_bot_id: site_bot_id)
   end
 
-  def self.save_pay_code(row)
+  def self.save_pay_code(row, site_bot_id)
     PayCode.create(payed_at: DateTime.parse(row_get_date(row)),
-                   term_code: row_get_term_code(row))
+                   term_code: row_get_term_code(row),
+                   site_bot_id: site_bot_id)
   end
 end

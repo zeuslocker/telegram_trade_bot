@@ -1,9 +1,9 @@
 module Actions
   class AddPhotoToTreasure < Trailblazer::Operation
-    ADD_PHOTO_TREASURE = '_Xadd_proto_treasure_|'.freeze # _Xadd_proto_treasure_|{"id": "eee"}
+    # _Xadd_proto_treasure_|{"id": "eee"}
     include DefaultMessage
 
-    step ::Macro::ParseModelParams(constant: ADD_PHOTO_TREASURE, message_method: :caption), fail_fast: true
+    step ::Macro::ParseModelParams(constant: SpecialMessageListener::ADD_PHOTO_TO_TREASURE, message_method: :caption), fail_fast: true
     step :setup_model
     failure :product_not_found, fail_fast: true
     step :update_treasure

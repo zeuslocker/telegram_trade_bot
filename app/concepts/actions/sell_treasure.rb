@@ -51,7 +51,7 @@ class Actions::SellTreasure < Trailblazer::Operation
   end
 
   def payment_not_found(bot, message, current_user)
-    bot.api.sendMessage(default_message(message, I18n.t('payment_not_found')))
+    bot.api.sendMessage(default_message(message, I18n.t('payment_not_found', pay_lock_time: PayHelpers::PAY_LOCK_TIME)))
     current_user.update(allowed_messages: (current_user.allowed_messages << MainListener::HOW_TO_PAY_COMMAND))
     current_user.update(pay_code_lock: Time.current)
   end

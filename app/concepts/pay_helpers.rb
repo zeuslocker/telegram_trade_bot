@@ -1,11 +1,11 @@
 module PayHelpers
   extend DefaultMessage
   EASYPAY_WALLET_ID = Rails.application.secrets[:easypay_wallet_id].freeze
-  EASYPAY_ROOT_URL = "#{PayHelpers::EASYPAY_ROOT_URL}"
+  EASYPAY_ROOT_URL = "https://partners.easypay.ua/"
   EASYPAY_SIGN_IN_URL = URI.parse("#{EASYPAY_ROOT_URL}auth/signin")
   EASYPAY_LOGIN =  Rails.application.secrets[:easypay_login].freeze
   EASYPAY_PASSWORD = Rails.application.secrets[:easypay_password].freeze
-  PAY_LOCK_TIME = 5
+  PAY_LOCK_TIME = 2
 
   def self.check_pay_code_locked?(current_user)
     current_user.pay_code_lock.present? &&
@@ -13,7 +13,7 @@ module PayHelpers
   end
 
   def self.payment_not_found(bot, message, current_user)
-    bot.api.sendMessage(default_message(message, I18n.t('payment_not_found')))
+    bot.api.sendMessage(default_message(message, I18n.t('payment_not_found', pay_lock_time: PayHelpers::PAY_LOCK_TIME)))
     current_user.update(allowed_messages: (current_user.allowed_messages << MainListener::HOW_TO_PAY_COMMAND))
     current_user.update(pay_code_lock: Time.current)
   end

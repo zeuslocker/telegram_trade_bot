@@ -16,8 +16,6 @@ class SiteBotsController < ApplicationController
   end
 
   def show
-    SiteBotsSupervisor.instance
-
     if current_site_user.site_bot.present?
       SiteBot::Show.call(params, {'current_user' => current_site_user}.with_indifferent_access)
       render html: cell(:site_bot, current_site_user.site_bot).(:show), layout: true

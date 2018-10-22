@@ -12,11 +12,10 @@ require 'action_cable/engine'
 require 'sprockets/railtie'
 require 'pry'
 require 'sidekiq/api'
+require "celluloid/autostart"
 require 'telegram/bot'
 require_relative '../app/modules/default_message'
-TELEGRAM_TOKEN = '448462483:AAGYcrVZJDEZyScLYMzIElUzNLNeGLaUbNQ'.freeze
-END { ::SiteBotsSupervisor.instance.terminate_all_bots }
-# require "rails/test_unit/railtie"
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -28,14 +27,9 @@ module BotTg
     config.load_defaults 5.1
     config.generators.system_tests = nil
     config.i18n.default_locale = :ua
-    #
-    # def bot_listener
-    #   Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
-    #     bot.listen do |message|
-    #         user = UserAuthorize.new(message.from.id, bot, message).perform
-    #         MainListener.new(bot, message, user, SiteBot.last).perform
-    #     end
-    #   end
-    # end
+
+    config.after_initialize do
+      SiteBotsSupervisor.instance
+    end
   end
 end

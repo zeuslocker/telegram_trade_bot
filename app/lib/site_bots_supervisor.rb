@@ -3,52 +3,40 @@ class SiteBotsSupervisor
 
   def initialize
     SiteBot.all.each do |site_bot|
-      BotWorker.perform_async(site_bot.id) unless
-        present_in_scheduled_set?('BotWorker', [site_bot.id]) || present_in_busy_set?('BotWorker', [site_bot.id])
+      bot = BotWorker.new(site_bot.id)
+      Celluloid::Actor[site_bot.site_user.username] = bot
+      bot.async.perform
     end
   end
 
-  def present_in_scheduled_set?(class_name, args)
-    r = ::Sidekiq::ScheduledSet.new
-
-    sceduled_result = r.select do |scheduled|
-      scheduled.klass == class_name &&
-      scheduled.args == args
-    end
-
-    sceduled_result.present?
+  def add_bot(site_bot)
+    bot = BotWorker.new(site_bot.id)
+    Celluloid::Actor[site_bot.site_user.username] = bot
+    bot.async.perform
   end
 
-  def present_in_busy_set?(class_name, args)
-    workers = Sidekiq::Workers.new
-
-    workers_result = workers.select do |x|
-      x[2]['payload']['class'] == class_name &&
-      x[2]['payload']['args'] == args
-    end
-
-    workers_result.present?
-  end
-
-  def add_bot(site_bot_id)
-    BotWorker.perform_async(site_bot_id) unless
-      present_in_scheduled_set?('BotWorker', [site_bot_id]) || present_in_busy_set?('BotWorker', [site_bot_id])
-  end
-
-  def restart_bot(site_bot_id)
-
+  def restart_bot(site_bot)
+    Celluloid::Actor[site_bot.site_user.username]&.terminate
+    site_bot.update(status: :enabled)
+    bot = BotWorker.new(site_bot.id)
+    Celluloid::Actor[site_bot.site_user.username] = bot
+    bot.async.perform
   end
 
   def restart_all_bots
+    SiteBot.all.each do |site_bot|
+      restart_bot(site_bot)
+    end
+  end
 
+  def terminate_bot(site_bot)
+    Celluloid::Actor[site_bot.site_user.username]&.terminate
   end
 
   def terminate_all_bots
-
-  end
-
-  def bot_thread(site_bot)
-
+    SiteBot.all.each do |site_bot|
+      terminate_bot(site_bot)
+    end
   end
 
   @@instance = SiteBotsSupervisor.new

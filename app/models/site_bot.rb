@@ -5,5 +5,5 @@ class SiteBot < ApplicationRecord
   has_many :pay_codes, dependent: :destroy
   has_many :products, dependent: :destroy
 
-  enum status: { disabled: 0, enabled: 1 }
+  enum status: { disabled: 1, enabled: 0 }
 end

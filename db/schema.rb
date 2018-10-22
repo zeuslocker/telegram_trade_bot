@@ -75,9 +75,7 @@ ActiveRecord::Schema.define(version: 20181019064358) do
     t.integer "location", null: false
     t.integer "status", default: 0
     t.text "file_ids", default: [], array: true
-    t.bigint "site_bot_id"
     t.index ["product_id"], name: "index_treasures_on_product_id"
-    t.index ["site_bot_id"], name: "index_treasures_on_site_bot_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -102,6 +100,5 @@ ActiveRecord::Schema.define(version: 20181019064358) do
   add_foreign_key "products", "site_bots"
   add_foreign_key "site_bots", "site_users"
   add_foreign_key "treasures", "products"
-  add_foreign_key "treasures", "site_bots"
   add_foreign_key "users", "site_bots"
 end

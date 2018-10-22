@@ -1,12 +1,13 @@
 class ProductTitleListener
   include Modules::DefaultOptions
 
-  attr_reader :bot, :message, :user
+  attr_reader :bot, :message, :user, :site_bot
 
-  def initialize(bot, message, user)
+  def initialize(bot, message, user, site_bot)
     @bot = bot
     @message = message
     @user = user
+    @site_bot = site_bot
   end
 
   def perform
@@ -14,6 +15,6 @@ class ProductTitleListener
   end
 
   def product
-    @product ||= Product.find_by(title: message.text, site_bot_id: user.site_bot.id)
+    @product ||= Product.find_by(title: message.text, site_bot_id: site_bot.id)
   end
 end

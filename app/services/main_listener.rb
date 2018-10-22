@@ -28,7 +28,7 @@ class MainListener
       if user.choosen_product_id.nil? # when product not choosen
         always_listen_messages
         price_listener
-        ProductTitleListener.new(bot, message, user).perform
+        ProductTitleListener.new(bot, message, user, site_bot).perform
       else
         always_listen_messages
         ProductListener.new(bot, message, user, site_bot).perform

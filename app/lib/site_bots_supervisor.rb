@@ -2,48 +2,53 @@ class SiteBotsSupervisor
   attr_accessor :site_bots
 
   def initialize
-    @site_bots = SiteBot.all.map do |site_bot|
-      {
-        id: site_bot.id,
-        thread: bot_thread(site_bot)
-      }
+    SiteBot.all.each do |site_bot|
+      BotWorker.perform_async(site_bot.id) unless
+        present_in_scheduled_set?('BotWorker', [site_bot.id]) || present_in_busy_set?('BotWorker', [site_bot.id])
     end
+  end
+
+  def present_in_scheduled_set?(class_name, args)
+    r = ::Sidekiq::ScheduledSet.new
+
+    sceduled_result = r.select do |scheduled|
+      scheduled.klass == class_name &&
+      scheduled.args == args
+    end
+
+    sceduled_result.present?
+  end
+
+  def present_in_busy_set?(class_name, args)
+    workers = Sidekiq::Workers.new
+
+    workers_result = workers.select do |x|
+      x[2]['payload']['class'] == class_name &&
+      x[2]['payload']['args'] == args
+    end
+
+    workers_result.present?
   end
 
   def add_bot(site_bot_id)
-    site_bot = SiteBot.find(site_bot_id)
-    @site_bots << { id: site_bot_id, thread: bot_thread(site_bot) }
+    BotWorker.perform_async(site_bot_id) unless
+      present_in_scheduled_set?('BotWorker', [site_bot_id]) || present_in_busy_set?('BotWorker', [site_bot_id])
   end
 
   def restart_bot(site_bot_id)
-    site_bot_item = @site_bots.detect do |site_bot|
-      site_bot[:id] == site_bot_id
-    end
 
-    site_bot_item[:thread].terminate
-    site_bot_item[:thread] = bot_thread(site_bot)
   end
 
   def restart_all_bots
-    @site_bots.each{|x| x[:thread].terminate }
-    @site_bots = SiteBot.all.map do |site_bot|
-      {
-        id: site_bot.id,
-        thread: bot_thread(site_bot)
-      }
-    end
+
   end
 
   def terminate_all_bots
-    @site_bots.each{|x| x[:thread].terminate }
+
   end
 
   def bot_thread(site_bot)
-    Thread.new do
-      Rails.application.executor.wrap do
-        BotThread.new(site_bot).start
-      end
-    end
+
   end
 
   @@instance = SiteBotsSupervisor.new

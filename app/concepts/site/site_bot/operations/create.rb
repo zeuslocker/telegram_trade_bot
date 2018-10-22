@@ -19,12 +19,12 @@ class SiteBot
 
     def generate_secret_commands
       {
-        AddPhotoToTreasure => "_X_#{SecureRandom.hex(4)}_add_proto_treasure_#{SecureRandom.hex(4)}_|",
-        AddProduct => "_X_#{SecureRandom.hex(4)}_add_product_#{SecureRandom.hex(4)}_|",
-        AddTreasure => "_X_#{SecureRandom.hex(4)}_add_treasure_#{SecureRandom.hex(4)}_|",
-        Broadcast => "_X_#{SecureRandom.hex(4)}_broadcast_message_#{SecureRandom.hex(4)}_|",
-        RemoveProduct => "_X_#{SecureRandom.hex(4)}_remove_product_#{SecureRandom.hex(4)}_|",
-        ShowGeneralInfo => "_X_#{SecureRandom.hex(4)}_show_gemeral_info_#{SecureRandom.hex(4)}_|"
+        SpecialMessageListener::ADD_PHOTO_TO_TREASURE => "_X_#{SecureRandom.hex(4)}_add_proto_treasure_#{SecureRandom.hex(4)}_|",
+        SpecialMessageListener::ADD_PRODUCT => "_X_#{SecureRandom.hex(4)}_add_product_#{SecureRandom.hex(4)}_|",
+        SpecialMessageListener::ADD_TREASURE => "_X_#{SecureRandom.hex(4)}_add_treasure_#{SecureRandom.hex(4)}_|",
+        SpecialMessageListener::BROADCAST => "_X_#{SecureRandom.hex(4)}_broadcast_message_#{SecureRandom.hex(4)}_|",
+        SpecialMessageListener::REMOVE_PRODUCT => "_X_#{SecureRandom.hex(4)}_remove_product_#{SecureRandom.hex(4)}_|",
+        SpecialMessageListener::SHOW_GENERAL_INFO => "_X_#{SecureRandom.hex(4)}_show_gemeral_info_#{SecureRandom.hex(4)}_|"
       }
     end
   end

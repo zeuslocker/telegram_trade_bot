@@ -11,6 +11,7 @@ require 'action_view/railtie'
 require 'action_cable/engine'
 require 'sprockets/railtie'
 require 'pry'
+require 'sidekiq/api'
 require 'telegram/bot'
 require_relative '../app/modules/default_message'
 TELEGRAM_TOKEN = '448462483:AAGYcrVZJDEZyScLYMzIElUzNLNeGLaUbNQ'.freeze
@@ -27,14 +28,6 @@ module BotTg
     config.load_defaults 5.1
     config.generators.system_tests = nil
     config.i18n.default_locale = :ua
-    # config.after_initialize do
-    #   begin
-    #     bot_listener
-    #   rescue Exception => e
-    #     binding.pry
-    #     #retry
-    #   end
-    # end
     #
     # def bot_listener
     #   Telegram::Bot::Client.run(TELEGRAM_TOKEN) do |bot|
